@@ -1,0 +1,55 @@
+#components-layout-demo-responsive .logo {
+  height: 32px;
+  /* background: rgba(255, 255, 255, 0.2); */
+  margin: 16px;
+}
+
+.sider {
+  background-color: #eff5f5 !important;
+  margin-right: 1px solid black;
+  padding: 10px;
+}
+
+.filter__label {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  /* margin-left: 20px; */
+  /* color: gray; */
+  font-size: 20px;
+  font-weight: 500;
+  vertical-align: center;
+}
+
+.filter__icon {
+  font-size: xx-large !important;
+  vertical-align: center;
+}
+
+.filter {
+  display: flex;
+}
+
+.layout2 {
+  background-color: eff5f5 !important;
+}
+
+.search__div {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+}
+
+.sort__div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.sort__by {
+  width: 150px !important;
+}
+
+.like__button {
+  color: #ff6666;
+}

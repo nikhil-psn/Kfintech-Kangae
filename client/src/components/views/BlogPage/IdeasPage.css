@@ -1,0 +1,15 @@
+.main__div {
+  display: flex;
+  /* flex-direction: row; */
+  /* align-items: center; */
+}
+.filters__div {
+  flex: 1;
+}
+.right__div {
+  background-color: aqua;
+}
+
+#right__div > * {
+  margin: 0px 30px;
+}

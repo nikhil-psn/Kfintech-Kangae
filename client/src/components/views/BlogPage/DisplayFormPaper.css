@@ -1,0 +1,54 @@
+.votes {
+  display: flex;
+  flex-direction: column;
+  padding-right: 20px;
+}
+
+.votescount {
+  /* margin-left: 1px; */
+  font-weight: 500;
+  font-size: 1.15rem;
+}
+
+.post {
+  display: flex;
+  /* font-family: Greycliff CF; */
+  overflow-wrap: break-word;
+  /* font-family: ratiolight; */
+  font-size: medium;
+}
+
+/* .paper :hover {
+  background-color: aliceblue;
+} */
+
+.post__status {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.postcontainer {
+  padding-bottom: 15px;
+}
+.dept {
+  background-color: teal;
+  border-radius: 15px;
+  color: white;
+  padding: 0px 5px 0px 5px;
+}
+/* .postscontainer{
+      margin-left: 5px;
+  } */
+.more {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.more__delete {
+  background-color: #ff3333;
+}
+
+.more__delete :hover {
+  background-color: #ff1a1a;
+}
