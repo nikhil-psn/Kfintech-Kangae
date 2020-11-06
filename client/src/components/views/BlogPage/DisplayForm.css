@@ -35,3 +35,7 @@
 /* .postscontainer{
     margin-left: 5px;
 } */
+
+.collapse__card {
+  border: 1px solid lightgray;
+}

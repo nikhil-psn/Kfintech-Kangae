@@ -16,11 +16,22 @@ import "./DisplayForm.css";
 import "./DisplayFormPaper.css";
 import DisplayFormPaper from "./DisplayFormPaper.js";
 import Trending from "./Trending";
+import TrendingIdea from "./TrendingIdea";
 import Card from "@material-ui/core/Card";
 import Paper from "@material-ui/core/Paper";
 // import TypeAheadDropDown from "./SearchBar.js";
 import SearchIcon from "@material-ui/icons/Search";
 import { InputBase } from "@material-ui/core";
+import Collapse from "@material-ui/core/Collapse";
+import Typography from "@material-ui/core/Typography";
+import CardContent from "@material-ui/core/CardContent";
+import ExpandMoreSharpIcon from "@material-ui/icons/ExpandMoreSharp";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import WhatshotIcon from "@material-ui/icons/Whatshot";
+import ForumIcon from "@material-ui/icons/Forum";
 
 const animatedComponents = makeAnimated();
 const optionsSort = [
@@ -47,8 +58,11 @@ const useStyles = makeStyles((theme) => ({
   },
   searchInput: {
     //opacity: '0.6',
-    padding: `10px ${theme.spacing(1)}px`,
+    // padding: `10px ${theme.spacing(1)}px`,
     backgroundColor: "#f2f2f2",
+    marginTop: "1px",
+    marginBottom: "1px",
+    height: "39px",
     borderRadius: "5px",
     fontSize: "1rem",
     "&:hover": {
@@ -62,6 +76,11 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     maxWidth: 350,
     backgroundColor: "#e0ebeb",
+  },
+  rootTrending: {
+    width: "100%",
+    maxWidth: 360,
+    backgroundColor: theme.palette.background.paper,
   },
   media: {
     height: 0,
@@ -90,22 +109,20 @@ export default function DisplayForm(props) {
   const [ideas, setIdeas] = useState([]);
   const [categoriesSrch, setCategoriesSrch] = useState([]);
   const [statusesSrch, setStatusesSrch] = useState([]);
-  const [expanded, setExpanded] = React.useState(false);
   const [titlesDropdown, setTitlesDropdown] = useState([]);
   const [sort, setSort] = useState("time -1");
-  const [refreshVal, setRefreshVal] = useState("0");
-
-  const refreshValChanged = (newValue) => {
-    setRefreshVal(newValue);
-  };
-
+  const [refreshVal, setRefreshVal] = useState(0);
+  const [expanded, setExpanded] = useState(false);
+  const [expanded1, setExpanded1] = useState(false);
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+  const handleExpandClick1 = () => {
+    setExpanded1(!expanded1);
+  };
 
-  const cardClicked = (e) => {
-    // console.log("The card is clicked  ::"  )
-    // console.log(e.title)
+  const refreshValChanged = (newValue) => {
+    setRefreshVal(newValue);
   };
 
   const [state, setState] = React.useState({
@@ -266,9 +283,10 @@ export default function DisplayForm(props) {
     <Paper className={classes.pageContent}>
       <Form style={{ height: "100%" }}>
         <Grid container spacing={3} style={{ paddingBottom: "25px" }}>
-          <Grid xs={3} style={{ paddingTop: "10.5px", paddingLeft: "15px" }}>
+          <Grid xs={3} style={{ paddingTop: "7px", paddingLeft: "9px" }}>
             <form onSubmit={searchingNow}>
               <InputBase
+                style={{ fontFamily: "ratiomedium" }}
                 placeholder="Search ideas"
                 id="searchBar"
                 className={classes.searchInput}
@@ -286,6 +304,7 @@ export default function DisplayForm(props) {
           <Grid xs={3} sm={3}>
             <FormControl variant="outlined" className={classes.formControl}>
               <Select
+                style={{ fontFamily: "ratiomedium" }}
                 id="dropdownSort"
                 className="sort__by"
                 onChange={SortChanged}
@@ -301,6 +320,7 @@ export default function DisplayForm(props) {
             <FormControl variant="outlined" className={classes.formControl}>
               {/* <InputLabel htmlFor="outlined-age-native-simple">State</InputLabel> */}
               <Select
+                style={{ fontFamily: "ratiomedium" }}
                 id="dropdown2"
                 onChange={itemClickedCategory}
                 closeMenuOnSelect={false}
@@ -315,6 +335,7 @@ export default function DisplayForm(props) {
           <Grid xs={3} sm={3}>
             <FormControl variant="outlined" className={classes.formControl}>
               <Select
+                style={{ fontFamily: "ratiomedium" }}
                 id="dropdown2"
                 onChange={itemClickedStatus}
                 closeMenuOnSelect={false}
@@ -345,11 +366,97 @@ export default function DisplayForm(props) {
             />
           </Grid>
           <Grid xs={4} style={{ paddingLeft: "20px", paddingRight: "10px" }}>
-            <Card className={classes.root} alignItems="center">
-              {/* <CardActionArea> */}
-              <Trending />
-              {/* </CardActionArea> */}
-            </Card>
+            {/* <Card alignItems="center"> */}
+            {/* <CardActionArea> */}
+            <List
+              component="nav"
+              className={classes.rootTrending}
+              aria-label="contacts"
+            >
+              <ListItem button onClick={handleExpandClick}>
+                <ListItemIcon>
+                  <WhatshotIcon fontSize="large" style={{ color: "#3C44B1" }} />
+                </ListItemIcon>
+                <ListItemText fontSize="large">
+                  {" "}
+                  <strong
+                    style={{
+                      fontSize: "22px",
+                      fontFamily: "ratiobold",
+                      color: "#3C44B1",
+                    }}
+                  >
+                    Trending
+                  </strong>
+                </ListItemText>
+                <IconButton
+                  className={clsx(classes.expand, {
+                    [classes.expandOpen]: expanded,
+                  })}
+                  onClick={handleExpandClick}
+                  aria-expanded={expanded}
+                  aria-label="show more"
+                >
+                  <ExpandMoreSharpIcon />
+                </IconButton>
+              </ListItem>
+            </List>
+
+            <Collapse
+              className={classes.root}
+              in={expanded}
+              timeout="auto"
+              unmountOnExit
+            >
+              <CardContent className="collapse__card">
+                <TrendingIdea refreshVal={refreshVal} />
+              </CardContent>
+            </Collapse>
+
+            <List
+              component="nav"
+              className={classes.rootTrending}
+              aria-label="contacts"
+            >
+              <ListItem button onClick={handleExpandClick1}>
+                <ListItemIcon>
+                  <ForumIcon fontSize="large" style={{ color: "#3C44B1" }} />
+                </ListItemIcon>
+                <ListItemText fontSize="large">
+                  {" "}
+                  <strong
+                    style={{
+                      fontSize: "22px",
+                      color: "#3C44B1",
+                      fontFamily: "ratiobold",
+                    }}
+                  >
+                    Messages
+                  </strong>
+                </ListItemText>
+                <IconButton
+                  className={clsx(classes.expand, {
+                    [classes.expandOpen]: expanded,
+                  })}
+                  onClick={handleExpandClick1}
+                  aria-expanded={expanded}
+                  aria-label="show more"
+                >
+                  <ExpandMoreSharpIcon />
+                </IconButton>
+              </ListItem>
+            </List>
+
+            <Collapse
+              className={classes.root}
+              in={expanded1}
+              timeout="auto"
+              unmountOnExit
+            >
+              <CardContent>
+                <TrendingIdea refreshVal={refreshVal} />
+              </CardContent>
+            </Collapse>
           </Grid>
         </Grid>
       </Form>

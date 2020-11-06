@@ -1,4 +1,5 @@
 .votes {
+  font-family: ratiobold;
   display: flex;
   flex-direction: column;
   padding-right: 20px;
@@ -10,11 +11,15 @@
   font-size: 1.15rem;
 }
 
+.post__title {
+  padding-top: 11px;
+  font-family: ratiobold​​​​;
+}
+
 .post {
   display: flex;
-  /* font-family: Greycliff CF; */
+  font-family: ratiobold;
   overflow-wrap: break-word;
-  /* font-family: ratiolight; */
   font-size: medium;
 }
 
@@ -25,6 +30,7 @@
 .post__status {
   margin-top: 20px;
   text-align: center;
+  font-family: ratiomedium;
 }
 
 .postcontainer {
@@ -35,20 +41,15 @@
   border-radius: 15px;
   color: white;
   padding: 0px 5px 0px 5px;
+  font-family: ratiobold;
 }
 /* .postscontainer{
       margin-left: 5px;
   } */
 .more {
   display: flex;
+  flex: 1;
+  min-width: 150px !important;
   flex-direction: column;
   justify-content: space-between;
-}
-
-.more__delete {
-  background-color: #ff3333;
-}
-
-.more__delete :hover {
-  background-color: #ff1a1a;
 }

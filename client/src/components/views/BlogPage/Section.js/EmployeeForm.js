@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Grid } from "@material-ui/core";
 import Controls from "../controls/Controls";
-import Popup from "../controls/Popup"
-import { useForm, Form } from "../useForm.js"
+import Popup from "../controls/Popup";
+import { useForm, Form } from "../useForm.js";
 import QuillEditor from "../../../editor/QuillEditor2";
 import { useSelector } from "react-redux";
 import { Editor } from "@tinymce/tinymce-react";
@@ -23,15 +23,15 @@ const useStyles = makeStyles({
   },
 });
 
-const CategoryOptions =[
-  { id: 'Accounting', title: 'Accounting' },
-  { id: 'Development', title: 'Development' },
-  { id: 'Finance', title: 'Finance' },
-  { id: 'HR', title: 'HR' },
-  { id: 'Operations', title: 'Operations' },
-  { id: 'Marketing', title: 'Marketing' },
-  { id: 'Technology', title: 'Technology' },
-]
+const CategoryOptions = [
+  { id: "Accounting", title: "Accounting" },
+  { id: "Development", title: "Development" },
+  { id: "Finance", title: "Finance" },
+  { id: "HR", title: "HR" },
+  { id: "Operations", title: "Operations" },
+  { id: "Marketing", title: "Marketing" },
+  { id: "Technology", title: "Technology" },
+];
 
 const initialFValues = {
   id: 0,
@@ -43,7 +43,7 @@ const initialFValues = {
 export default function EmployeeForm() {
   const user = useSelector((state) => state.user);
 
-  const [isPermanent,setIsPermanent]=useState(false);
+  const [isPermanent, setIsPermanent] = useState(false);
   const [openPopup, setOpenPopup] = useState(false);
   const [content1, setContent1] = useState("");
   const [files, setFiles] = useState([]);
@@ -57,7 +57,6 @@ export default function EmployeeForm() {
   const onFilesChange = (files) => {
     setFiles(files);
   };
-
 
   const classes = useStyles();
 
@@ -94,54 +93,52 @@ export default function EmployeeForm() {
       console.log("the editor  value is :");
       console.log(content1);
       console.log("Anonymous?");
-      console.log(isPermanent)
+      console.log(isPermanent);
       if (user.userData && !user.userData.isAuth) {
         alert("Please Log in first");
+      } else {
+        console.log("the user is :");
+        console.log(user.userData);
+        console.log(user.userData.email);
       }
-      else{
-        console.log("the user is :")
-        console.log(user.userData)
-        console.log(user.userData.email)
-      }
-      const d = new Date()
-      console.log(d)
-      const variables ={
-        title:document.getElementsByName("fullName")[0].value,
-        email:"priyadarshi@kfintech.com",
-        category:document.getElementsByName("departmentId")[0].value,
-        body:content1,
-        anonymous:isPermanent,
-        likes:["Abhishek"],
-        unlikes:[],
-        comments:["That can save us from losing our money"],
-        status:"Ideation",
-        time:d
-      }
+      const d = new Date();
+      console.log(d);
+      const variables = {
+        title: document.getElementsByName("fullName")[0].value,
+        email: user.userData.email,
+        category: document.getElementsByName("departmentId")[0].value,
+        body: content1,
+        anonymous: isPermanent,
+        likes: [],
+        unlikes: [],
+        comments: [],
+        status: "Ideation",
+        time: d,
+      };
 
       axios.post("/api/ideas/createIdea", variables).then((response) => {
         if (response.data.success) {
-          setOpenPopup(true)
+          setOpenPopup(true);
           // message.success("Idea Created Successfully!");
           // setContent1("");
           // resetForm();
           setTimeout(() => {
-            window.location = '/ideas';
+            window.location = "/ideas";
           }, 200);
         }
       });
     }
-    }
-  const CheckboxChange=(v)=>{
-    console.log("Checkbox changed")
-    if(isPermanent){
+  };
+  const CheckboxChange = (v) => {
+    console.log("Checkbox changed");
+    if (isPermanent) {
       setIsPermanent(false);
-      console.log("checkbox unchecked")
-    }
-    else{
+      console.log("checkbox unchecked");
+    } else {
       setIsPermanent(true);
-      console.log("checkbox checked")
+      console.log("checkbox checked");
     }
-  }
+  };
 
   // const handleEditorChange = (content, editor) => {
   //   console.log("Content was updated:", content);
@@ -152,15 +149,17 @@ export default function EmployeeForm() {
     <Form onSubmit={handleSubmit}>
       <Grid container xs={12}>
         <Grid item xs={8}>
-          <Controls.Input id="name_id"
+          <Controls.Input
+            id="name_id"
             name="fullName"
             label="Title"
             value={values.fullName}
             onChange={handleInputChange}
             error={errors.fullName}
           />
-          <Controls.Select id="category_id"
-           className="categoryselection"
+          <Controls.Select
+            id="category_id"
+            className="categoryselection"
             name="departmentId"
             label="Category"
             value={values.departmentId}
@@ -169,18 +168,19 @@ export default function EmployeeForm() {
             error={errors.departmentId}
           />
           <Controls.Checkbox
-          id="isPermanent"
+            id="isPermanent"
             name="isPermanent"
             label="Anonymous"
             value={isPermanent}
             onChange={CheckboxChange}
           />
-          <QuillEditor 
-                  placeholder={"What is your idea?"}
-                  onEditorChange={onEditorChange}
-                  onFilesChange={onFilesChange}
-                  onFirstRender={onFirstRender}
-                />
+          <QuillEditor
+            style={{ width: "95%" }}
+            placeholder={"What is your idea?"}
+            onEditorChange={onEditorChange}
+            onFilesChange={onFilesChange}
+            onFirstRender={onFirstRender}
+          />
         </Grid>
         <Grid item xs={12} sm={4}>
           <Card className={classes.root}>
@@ -190,25 +190,29 @@ export default function EmployeeForm() {
                   Tips
                 </Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
-                  Kindly refrain from posting redundant ideas. Go through the existing ideas to check if an indistinguishable idea has already been put up. Leverage this portal to bring your ideas in the view of Kfintech's Management. Do not try to criticize, demean or blame anyone. Do not use offensive language.  
+                  Kindly refrain from posting redundant ideas. Go through the
+                  existing ideas to check if an indistinguishable idea has
+                  already been put up. Leverage this portal to bring your ideas
+                  in the view of Kfintech's Management. Do not try to criticize,
+                  demean or blame anyone. Do not use offensive language.
                 </Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
-                  Leverage this portal to bring your ideas in the view of Kfintech's Management. 
+                  Leverage this portal to bring your ideas in the view of
+                  Kfintech's Management.
                 </Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
-                  Do not try to criticize, demean or blame anyone. Do not use offensive language.  
+                  Do not try to criticize, demean or blame anyone. Do not use
+                  offensive language.
                 </Typography>
               </CardContent>
             </CardActionArea>
           </Card>
         </Grid>
-        <Grid item xs={12} style={{paddingTop:"16px"}}>
+        <Grid item xs={12} style={{ paddingTop: "16px" }}>
           <div>
             {/* <Controls.Button type="submit" text="Submit"  onClick ={()=>setOpenPopup(true)} /> */}
             <Controls.Button type="submit" text="Submit" />
-            <Popup
-              openPopup ={openPopup}
-              setOpenPopup ={setOpenPopup}></Popup> 
+            <Popup openPopup={openPopup} setOpenPopup={setOpenPopup}></Popup>
             <Controls.Button text="Reset" color="default" onClick={resetForm} />
           </div>
         </Grid>

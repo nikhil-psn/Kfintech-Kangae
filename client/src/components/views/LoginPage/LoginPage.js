@@ -82,16 +82,28 @@ function LoginPage(props) {
           handleReset,
         } = props;
         return (
-          <div className="app" >
-            <Title className="LoginHeader" level={2}>Log In with Email and Password</Title>
-            <form onSubmit={handleSubmit} style={{ width: "350px" }}>
-              <Form.Item required>
+          <div className="app">
+            <Title
+              className="LoginHeader"
+              level={2}
+              style={{ fontSize: "3rem", lineHeight: "0px" }}
+            >
+              Login
+            </Title>
+            <form
+              className="login__container"
+              onSubmit={handleSubmit}
+              style={{ width: "300px" }}
+            >
+              <Form.Item required className="login__email">
+                {/* <h5>E-mail</h5> */}
                 <Input
                   id="email"
                   prefix={
                     <Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />
                   }
                   placeholder="Enter your email"
+                  style={{ minWidth: "100%" }}
                   type="email"
                   value={values.email}
                   onChange={handleChange}
@@ -108,6 +120,7 @@ function LoginPage(props) {
               </Form.Item>
 
               <Form.Item required>
+                {/* <h5>Password</h5> */}
                 <Input
                   id="password"
                   prefix={
@@ -145,9 +158,10 @@ function LoginPage(props) {
                 </label>
               )}
 
-              <Form.Item>
+              <Form.Item style={{ marginTop: "4px" }}>
                 <Checkbox
                   className="rememberMe"
+                  style={{ fontFamily: "ratiomedium" }}
                   id="rememberMe"
                   onChange={handleRememberMe}
                   checked={rememberMe}
@@ -157,16 +171,16 @@ function LoginPage(props) {
                 <a
                   className="login-form-forgot"
                   // href="/reset_user"
-                  style={{ float: "right" }}
+                  style={{ float: "right", fontFamily: "ratiomedium" }}
                 >
-                  forgot password
+                  forgot password ?
                 </a>
                 <div>
                   <Button
                     type="primary"
                     htmlType="submit"
                     className="login-form-button"
-                    style={{ minWidth: "100%" }}
+                    style={{ minWidth: "100%", fontFamily: "ratiobold" }}
                     disabled={isSubmitting}
                     onSubmit={handleSubmit}
                   >

@@ -22,11 +22,14 @@ import { Editor } from "@tinymce/tinymce-react";
 import Controls from "./controls/Controls";
 import TextField from "@material-ui/core/TextField";
 import SendIcon from "@material-ui/icons/Send";
+import parse from "html-react-parser";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
     margin: theme.spacing(0),
     padding: theme.spacing(3),
+    fontFamily: "ratiobold",
   },
   root: {
     flexGrow: 1,
@@ -35,11 +38,14 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
     textAlign: "center",
     color: theme.palette.text.secondary,
+    fontFamily: "ratiobold",
   },
 }));
 
 export default function IdeaPopup(props) {
+  const user = useSelector((state) => state.user);
   const [commentVal, setCommentVal] = useState("");
+  const [commentsChanged, setCommentsChanged] = useState("");
   const [ideaComments, setIdeaComments] = useState([props.popupidea.comments]);
   const classes = useStyles();
 
@@ -54,15 +60,20 @@ export default function IdeaPopup(props) {
 
   const addComment = () => {
     console.log("Adding the comment:" + commentVal);
-    const variables = { ideaId: props.popupidea._id, comment: commentVal };
+    const c = {
+      comment: commentVal,
+      commentBy: user.userData.email,
+    };
+    const variables = { ideaId: props.popupidea._id, comment: c };
     axios.post("/api/ideas/addComment", variables).then((response) => {
       if (response.data.success) {
         console.log("Comment added sucessfully - UI");
         axios.post("/api/ideas/getIdea", variables).then((response) => {
           if (response.data.success) {
-            console.log("the odified idea used by UI is :");
+            console.log("the modified idea used by UI is :");
             console.log(response.data.idea);
             setIdeaComments(response.data.idea.comments);
+            setCommentsChanged(commentsChanged + 1);
             setCommentVal("");
           } else {
             alert("Something went wrong");
@@ -85,6 +96,22 @@ export default function IdeaPopup(props) {
   });
 
   useEffect(() => {
+    const variables = { ideaId: props.popupidea._id };
+    axios.post("/api/ideas/getIdea", variables).then((response) => {
+      if (response.data.success) {
+        console.log("the idea used by UI is :");
+        console.log(response.data.idea);
+        setIdeaComments(response.data.idea.comments);
+        setCommentVal("");
+      } else {
+        alert("Something went wrong");
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    console.log("The comments are : ");
+    console.log(ideaComments);
     questions = displayQuestions ? (
       ideaComments.map((c, index) => {
         return <Comment key={index} title={c} />;
@@ -93,7 +120,7 @@ export default function IdeaPopup(props) {
       <div></div>
     );
     // console.log(questions)
-  }, [displayQuestions, ideaComments]);
+  }, [displayQuestions, commentsChanged]);
 
   var visible = displayQuestions ? "" : "none";
   console.log(visible);
@@ -114,7 +141,7 @@ export default function IdeaPopup(props) {
                 gutterBottom
                 variant="h5"
                 component="h2"
-                style={{ color: "#3C44B1" }}
+                style={{ color: "#3C44B1", fontFamily: "ratiobold" }}
               >
                 {props.popupidea.title}
               </Typography>
@@ -124,6 +151,7 @@ export default function IdeaPopup(props) {
                 color="black"
                 component="p"
                 textAlign="left"
+                style={{ fontFamily: "ratiolight" }}
               >
                 Submitted by{" "}
                 <strong>
@@ -131,7 +159,7 @@ export default function IdeaPopup(props) {
                     ? "An anonymous person"
                     : props.popupidea.email}
                 </strong>{" "}
-                | Created At<strong>{props.popupidea.createdAt}</strong>
+                | Created At<strong>{props.popupidea.time}</strong>
               </Typography>
               <Divider style={{ marginTop: "8px", marginBottom: "16px" }} />
               <Typography
@@ -139,8 +167,9 @@ export default function IdeaPopup(props) {
                 color="black"
                 component="p"
                 textAlign="left"
+                style={{ fontFamily: "ratiomedium" }}
               >
-                {props.popupidea.body}
+                {parse(props.popupidea.body)}
               </Typography>
               <Divider style={{ marginTop: "8px", marginBottom: "16px" }} />
               <div className="votes" style={{ flexDirection: "row" }}>
@@ -174,7 +203,11 @@ export default function IdeaPopup(props) {
               >
                 <div style={{ display: "flex", flexDirection: "row" }}>
                   <TextField
-                    style={{ width: "90%", borderRadius: "50px" }}
+                    style={{
+                      width: "90%",
+                      borderRadius: "50px",
+                      fontFamily: "ratiomedium",
+                    }}
                     id="commentTextArea"
                     placeholder="Add a comment"
                     multiline

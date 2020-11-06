@@ -8,6 +8,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import WhatshotIcon from "@material-ui/icons/Whatshot";
 import IdeaPopup from "./controls/IdeaPopup";
 import TrendingUpIcon from "@material-ui/icons/TrendingUp";
+import "./TrendingIdea.css";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -15,9 +16,14 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 360,
     backgroundColor: theme.palette.background.paper,
   },
+  rootTrending: {
+    width: "100%",
+    maxWidth: 360,
+    backgroundColor: "#e0ebeb",
+  },
 }));
 
-export default function TrendingIdea() {
+export default function TrendingIdea(props) {
   const classes = useStyles();
   const [trending, setTrending] = useState([]);
   const [openPopup, setOpenPopup] = useState(false);
@@ -32,25 +38,25 @@ export default function TrendingIdea() {
         alert("Couldnt get trending idea`s lists");
       }
     });
-  }, []);
+  }, [props.refreshVal]);
 
   return trending.map((t) => {
     return (
       <div>
         <List
           component="nav"
-          className={classes.root}
+          className={classes.rootTrending}
           aria-label="contacts"
           onClick={() => {
             setPopupidea(t);
             setOpenPopup(true);
           }}
         >
-          <ListItem button>
+          <ListItem button className={classes.rootTrending}>
             <ListItemIcon>
               <TrendingUpIcon style={{ color: "#3C44B1" }} />
             </ListItemIcon>
-            <ListItemText>{t.title}</ListItemText>
+            <ListItemText className="trending__title">{t.title}</ListItemText>
           </ListItem>
         </List>
         <IdeaPopup

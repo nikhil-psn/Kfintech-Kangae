@@ -69,16 +69,7 @@ function LandingPage() {
           Portal{" "}
         </h1>
 
-        <ul
-          className="homepagetiles"
-          style={{
-            backgroundColor: "black",
-            left: "50%",
-            height: "250px",
-            display: "flex",
-            transform: "rotate(-25deg) skew(20deg)",
-          }}
-        >
+        <ul className="homepagetiles">
           <li>
             <a href="#">
               <span></span>

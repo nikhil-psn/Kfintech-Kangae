@@ -6,11 +6,35 @@
   font-family: ratiobold;
 }
 
+@font-face {
+  src: url(./ratioLight.ttf);
+  font-weight: normal;
+  font-style: normal;
+
+  font-family: ratiolight;
+}
+
+@font-face {
+  src: url(./ratioMedium.ttf);
+  font-weight: normal;
+  font-style: normal;
+
+  font-family: ratiomedium;
+}
+
 h2 {
   font-family: ratiobold;
   font-size: 120px;
   line-height: 144px;
   font-weight: 800;
+}
+
+.homepagetiles {
+  background-color: black;
+  left: 50%;
+  height: 250px;
+  display: flex;
+  transform: rotate(-25deg) skew(20deg);
 }
 
 html {
@@ -43,12 +67,43 @@ body {
 h1 {
   text-align: left;
   font-family: ratiobold;
-  padding-top: 150px;
+  padding-top: 80px;
   padding-left: 100px;
   font-size: 5rem;
   color: white !important;
   transform-style: preserve-3d;
   transform: rotate(-25deg) skew(20deg);
+}
+
+@media screen and (max-width: 700px) {
+  h1 {
+    text-align: center;
+    font-family: ratiobold;
+    padding-top: 80px;
+    padding-left: 0;
+    font-size: 3rem;
+    color: white !important;
+    transform-style: none;
+    transform: none;
+  }
+
+  .homepagetiles > :nth-child(4) {
+    display: none;
+  }
+  .homepagetiles > :first-child {
+    display: none;
+  }
+
+  .homepagetiles {
+    transform: none;
+  }
+
+  ul li::before {
+    display: none;
+  }
+  ul li::after {
+    display: none;
+  }
 }
 
 h5 {

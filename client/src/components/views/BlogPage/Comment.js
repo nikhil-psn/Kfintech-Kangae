@@ -1,11 +1,17 @@
-import React from 'react';
- 
-const Comment = ( props ) => {
+import React from "react";
+
+const Comment = (props) => {
   return (
-   <div className="Comment" id={props.index}>
-    <p>{props.title}</p>
-   </div>
-  )
- };
- 
- export default Comment;
+    <div
+      style={{ fontFamily: "ratiomedium" }}
+      className="Comment"
+      id={props.index}
+    >
+      <p>
+        {props.title.comment} <small>-{props.title.commentBy}</small>
+      </p>
+    </div>
+  );
+};
+
+export default Comment;

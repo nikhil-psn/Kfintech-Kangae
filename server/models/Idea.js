@@ -32,8 +32,8 @@ const ideaSchema = mongoose.Schema({
     default: [],
   },
   comments: {
-    // type: [{ comment: String, commentor: String }],
-    type: [String],
+    type: [{ comment: String, commentBy: String }],
+    // type: [String],
     default: [],
   },
   time: {

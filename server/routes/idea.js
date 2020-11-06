@@ -116,7 +116,6 @@ router.post("/searchIdeas", (req, res) => {
 });
 
 router.post("/addComment", (req, res) => {
-  // const c = { comment: req.body.comment, commentor: "" };
   Idea.update(
     { _id: req.body.ideaId },
     { $push: { comments: req.body.comment } }
@@ -125,7 +124,7 @@ router.post("/addComment", (req, res) => {
     res.status(200).json({ success: true, ideas });
     console.log("the request body is : ");
     console.log(req.body);
-    console.log("The idea liked is : ");
+    console.log("The idea commented is : ");
     console.log(ideas);
   });
 });
@@ -155,6 +154,7 @@ router.post("/getIdeas", (req, res) => {
       ]).exec((err, ideas) => {
         if (err) return res.status(400).send(err);
         res.status(200).json({ success: true, ideas });
+        console.log(ideas);
       });
     } else {
       Idea.aggregate([
@@ -174,6 +174,7 @@ router.post("/getIdeas", (req, res) => {
       ]).exec((err, ideas) => {
         if (err) return res.status(400).send(err);
         res.status(200).json({ success: true, ideas });
+        console.log(ideas);
       });
     }
   }
@@ -191,7 +192,7 @@ router.post("/getIdeas", (req, res) => {
         // console.log("the request body is : ");
         // console.log(req.body);
         // console.log("The ideas found are : Server");
-        // console.log(ideas);
+        console.log(ideas);
       });
 });
 
@@ -209,7 +210,10 @@ router.post("/getMyIdeas", (req, res) => {
 });
 
 router.get("/getTrending", (req, res) => {
+  var date = new Date();
+  date.setDate(date.getDate() - 1);
   Idea.aggregate([
+    { $match: { time: { $gt: date } } },
     {
       $addFields: {
         answers_count: {

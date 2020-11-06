@@ -127,6 +127,7 @@ export default function DisplayFormPaper(props) {
               console.log(response.data.idea);
               console.log(idea.likes);
               console.log("liked the idea and removed from unliked");
+              props.refreshValChanged(refreshVal + 1);
             } else {
               alert("Couldnt unlike the  idea");
             }
@@ -144,6 +145,7 @@ export default function DisplayFormPaper(props) {
               console.log(response.data.idea);
               console.log(idea.likes);
               console.log("just liked the idea");
+              props.refreshValChanged(refreshVal + 1);
             } else {
               alert("Couldnt like the  idea");
             }
@@ -175,6 +177,7 @@ export default function DisplayFormPaper(props) {
               console.log(response.data.idea);
               console.log(idea.likes);
               console.log("unliked the idea and removed from liked");
+              props.refreshValChanged(refreshVal + 1);
             } else {
               alert("Couldnt unlike the  idea");
             }
@@ -192,6 +195,7 @@ export default function DisplayFormPaper(props) {
               console.log(response.data.idea);
               console.log(idea.likes);
               console.log("just unliked the idea");
+              props.refreshValChanged(refreshVal + 1);
             } else {
               alert("Couldnt unlike the  idea");
             }
@@ -316,7 +320,7 @@ export default function DisplayFormPaper(props) {
                 onClick={() => likeIdea(some_idea)}
               />
             </IconButton>
-            <span className="votescount" style={{ fontSize: 25 }}>
+            <span className="votescount" style={{ fontSize: 22 }}>
               {some_idea.likes.length - some_idea.unlikes.length}
             </span>
             <IconButton>
@@ -337,7 +341,11 @@ export default function DisplayFormPaper(props) {
               <Typography
                 gutterBottom
                 variant="h5"
-                style={{ fontSize: "1.3rem", color: "#232769" }}
+                style={{
+                  fontSize: "1.3rem",
+                  fontFamily: "ratiobold",
+                  color: "#232769",
+                }}
                 component="h3"
               >
                 {some_idea.title}
@@ -348,8 +356,11 @@ export default function DisplayFormPaper(props) {
               <strong>
                 {some_idea.anonymous ? "An anonymous person" : some_idea.email}
               </strong>{" "}
-              | Created at <strong>{some_idea.time}</strong> |{" "}
-              <span className="dept">{some_idea.category}</span>
+              | Created at{" "}
+              <strong>
+                {Date(some_idea.time).toLocaleString().split(" GMT")[0]}
+              </strong>{" "}
+              | <span className="dept">{some_idea.category}</span>
             </div>
           </div>
           {props.admin && (
