@@ -56,11 +56,15 @@ function LoginPage(props) {
                 }
                 props.history.push("/");
               } else {
-                setFormErrorMessage("Check out your Account or Password again");
+                setFormErrorMessage(
+                  "Check out your Account or Password and try again"
+                );
               }
             })
             .catch((err) => {
-              setFormErrorMessage("Check out your Account or Password again");
+              setFormErrorMessage(
+                "Check out your Account or Password and try again"
+              );
               setTimeout(() => {
                 setFormErrorMessage("");
               }, 3000);
@@ -91,6 +95,7 @@ function LoginPage(props) {
               Login
             </Title>
             <form
+              type="submit"
               className="login__container"
               onSubmit={handleSubmit}
               style={{ width: "300px" }}

@@ -294,7 +294,7 @@ export default function DisplayFormPaper(props) {
     // });
   };
 
-  return props.ideas.map((some_idea) => {
+  const ideasList = props.ideas.map((some_idea) => {
     return (
       <Paper
         id={some_idea._id + "paper"}
@@ -304,12 +304,6 @@ export default function DisplayFormPaper(props) {
         style={{ paddingBottom: "10px", overflowX: "auto" }}
       >
         <div className="post" id={some_idea._id + "div"}>
-          <IdeaPopup
-            id={some_idea._id + "popup"}
-            popupidea={popupidea}
-            openPopup={openPopup}
-            setOpenPopup={setOpenPopup}
-          ></IdeaPopup>
           <div
             className="votes"
             style={{ display: "flex", alignItems: "center" }}
@@ -356,11 +350,8 @@ export default function DisplayFormPaper(props) {
               <strong>
                 {some_idea.anonymous ? "An anonymous person" : some_idea.email}
               </strong>{" "}
-              | Created at{" "}
-              <strong>
-                {Date(some_idea.time).toLocaleString().split(" GMT")[0]}
-              </strong>{" "}
-              | <span className="dept">{some_idea.category}</span>
+              | Created at <strong>{some_idea.time}</strong> |{" "}
+              <span className="dept">{some_idea.category}</span>
             </div>
           </div>
           {props.admin && (
@@ -394,4 +385,16 @@ export default function DisplayFormPaper(props) {
       </Paper>
     );
   });
+
+  return (
+    <div>
+      {ideasList}
+      <IdeaPopup
+        id={"IdeaPopup"}
+        popupidea={popupidea}
+        openPopup={openPopup}
+        setOpenPopup={setOpenPopup}
+      ></IdeaPopup>
+    </div>
+  );
 }

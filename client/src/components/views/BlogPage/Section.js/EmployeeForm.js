@@ -129,6 +129,7 @@ export default function EmployeeForm() {
       });
     }
   };
+
   const CheckboxChange = (v) => {
     console.log("Checkbox changed");
     if (isPermanent) {

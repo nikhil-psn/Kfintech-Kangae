@@ -32,6 +32,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import WhatshotIcon from "@material-ui/icons/Whatshot";
 import ForumIcon from "@material-ui/icons/Forum";
+import Chats from "./Chats.js";
 
 const animatedComponents = makeAnimated();
 const optionsSort = [
@@ -296,10 +297,6 @@ export default function DisplayForm(props) {
                 style={{ color: "black" }}
               />
             </form>
-            {/* <TypeAheadDropDown id="searchDropdown" iteams={titlesDropdown} onChange={searchValue} />
-          <IconButton aria-label="search" onClick={searchTriggered}>
-            <SearchIcon/>
-          </IconButton> */}
           </Grid>
           <Grid xs={3} sm={3}>
             <FormControl variant="outlined" className={classes.formControl}>
@@ -318,7 +315,6 @@ export default function DisplayForm(props) {
           </Grid>
           <Grid xs={3} sm={3}>
             <FormControl variant="outlined" className={classes.formControl}>
-              {/* <InputLabel htmlFor="outlined-age-native-simple">State</InputLabel> */}
               <Select
                 style={{ fontFamily: "ratiomedium" }}
                 id="dropdown2"
@@ -366,8 +362,6 @@ export default function DisplayForm(props) {
             />
           </Grid>
           <Grid xs={4} style={{ paddingLeft: "20px", paddingRight: "10px" }}>
-            {/* <Card alignItems="center"> */}
-            {/* <CardActionArea> */}
             <List
               component="nav"
               className={classes.rootTrending}
@@ -401,7 +395,6 @@ export default function DisplayForm(props) {
                 </IconButton>
               </ListItem>
             </List>
-
             <Collapse
               className={classes.root}
               in={expanded}
@@ -412,7 +405,6 @@ export default function DisplayForm(props) {
                 <TrendingIdea refreshVal={refreshVal} />
               </CardContent>
             </Collapse>
-
             <List
               component="nav"
               className={classes.rootTrending}
@@ -431,22 +423,21 @@ export default function DisplayForm(props) {
                       fontFamily: "ratiobold",
                     }}
                   >
-                    Messages
+                    Chats
                   </strong>
                 </ListItemText>
                 <IconButton
                   className={clsx(classes.expand, {
-                    [classes.expandOpen]: expanded,
+                    [classes.expandOpen]: expanded1,
                   })}
                   onClick={handleExpandClick1}
-                  aria-expanded={expanded}
+                  aria-expanded={expanded1}
                   aria-label="show more"
                 >
                   <ExpandMoreSharpIcon />
                 </IconButton>
               </ListItem>
             </List>
-
             <Collapse
               className={classes.root}
               in={expanded1}
@@ -454,7 +445,7 @@ export default function DisplayForm(props) {
               unmountOnExit
             >
               <CardContent>
-                <TrendingIdea refreshVal={refreshVal} />
+                <Chats />
               </CardContent>
             </Collapse>
           </Grid>

@@ -18,7 +18,7 @@ import Typography from "@material-ui/core/Typography";
 import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 import Controls from "./Controls";
 import { Close } from "@material-ui/icons";
-import IdeaContent from "../IdeaContent.js";
+import ChatContent from "../ChatContent.js";
 import ActionButton from "./ActionButton";
 
 const DialogActions = withStyles((theme) => ({
@@ -40,6 +40,7 @@ export default function Popup(props) {
   const handleClose = () => {
     setOpen(false);
   };
+
   return (
     <Dialog
       open={props.openPopup}
@@ -49,7 +50,7 @@ export default function Popup(props) {
       }}
     >
       <DialogContent dividers style={{ backgroundColor: "#3C44B1" }}>
-        <IdeaContent popupidea={props.popupidea} />
+        <ChatContent chat={props.chat} />
       </DialogContent>
     </Dialog>
   );
