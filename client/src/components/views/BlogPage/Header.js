@@ -14,6 +14,7 @@ import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import SearchIcon from "@material-ui/icons/Search";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
+import EqualizerIcon from "@material-ui/icons/Equalizer";
 import Avatar from "@material-ui/core/Avatar";
 import { Link } from "react-router-dom";
 // import { Link } from "react-router-dom";
@@ -52,64 +53,71 @@ export default function Header() {
   // };
 
   return (
-    <AppBar position="static" className={classes.root}>
-      <Toolbar>
-        <Grid container alignItems="center">
-          <Grid item>
-            <Link to="/">
-              <img
-                width="150px"
-                src="https://www.greatplacetowork.in/great/admin/uploads/company_logo/16961528141575979231.jpg"
-                alt=""
-              />
-            </Link>
-            {/* <InputBase
+    <div className="header__div">
+      <AppBar position="static" className={classes.root}>
+        <Toolbar>
+          <Grid container alignItems="center">
+            <Grid item>
+              <Link to="/">
+                <img
+                  width="150px"
+                  src="https://www.greatplacetowork.in/great/admin/uploads/company_logo/16961528141575979231.jpg"
+                  alt=""
+                />
+              </Link>
+              {/* <InputBase
               placeholder="Search topics"
               className={classes.searchInput}
               startAdornment={<SearchIcon fontSize="small" />}
             /> */}
+            </Grid>
+            <Grid item sm></Grid>
+            <Grid item>
+              <Link to="/newIdea">
+                <IconButton>
+                  <AddCircleOutlineIcon />
+                  {/* </a> */}
+                </IconButton>
+              </Link>
+              <Link to="/analytics">
+                <IconButton>
+                  <EqualizerIcon />
+                </IconButton>
+              </Link>
+              <Link to="/profile">
+                <IconButton style={{ backgroundColor: "transparent" }}>
+                  <Avatar className={classes.purple}>{name}</Avatar>
+                </IconButton>
+              </Link>
+              <Link>
+                <IconButton>
+                  {/* <Badge badgeContent={4} color="secondary"> */}
+                  <NotificationsNoneIcon fontSize="small" />
+                  {/* </Badge> */}
+                </IconButton>
+              </Link>
+              {/* <Badge badgeContent={3} color="primary"> */}
+              <Link>
+                <IconButton>
+                  <ChatBubbleOutlineIcon fontSize="small" />
+                </IconButton>
+              </Link>
+              {/* </Badge> */}
+              <Link to="/admin">
+                <IconButton>
+                  <SupervisorAccountIcon fontSize="small" />
+                </IconButton>
+              </Link>
+              <Link to="/login">
+                <IconButton>
+                  <PowerSettingsNewIcon />
+                  {/* <PowerSettingsNewIcon style={{ color: "blue" }} /> */}
+                </IconButton>
+              </Link>
+            </Grid>
           </Grid>
-          <Grid item sm></Grid>
-          <Grid item>
-            <Link to="/newIdea">
-              <IconButton>
-                <AddCircleOutlineIcon />
-                {/* </a> */}
-              </IconButton>
-            </Link>
-            <Link to="/profile">
-              <IconButton style={{ backgroundColor: "transparent" }}>
-                <Avatar className={classes.purple}>{name}</Avatar>
-              </IconButton>
-            </Link>
-            <Link>
-              <IconButton>
-                {/* <Badge badgeContent={4} color="secondary"> */}
-                <NotificationsNoneIcon fontSize="small" />
-                {/* </Badge> */}
-              </IconButton>
-            </Link>
-            {/* <Badge badgeContent={3} color="primary"> */}
-            <Link>
-              <IconButton>
-                <ChatBubbleOutlineIcon fontSize="small" />
-              </IconButton>
-            </Link>
-            {/* </Badge> */}
-            <Link to="/admin">
-              <IconButton>
-                <SupervisorAccountIcon fontSize="small" />
-              </IconButton>
-            </Link>
-            <Link to="/login">
-              <IconButton>
-                <PowerSettingsNewIcon />
-                {/* <PowerSettingsNewIcon style={{ color: "blue" }} /> */}
-              </IconButton>
-            </Link>
-          </Grid>
-        </Grid>
-      </Toolbar>
-    </AppBar>
+        </Toolbar>
+      </AppBar>
+    </div>
   );
 }

@@ -69,4 +69,13 @@ router.get("/logout", auth, (req, res) => {
   );
 });
 
+router.get("/getEmails", (req, res) => {
+  // console.log("The unique titles are :: ");
+  User.distinct("email").exec((err, emails) => {
+    if (err) return res.status(400).send(err);
+    // console.log(titles)
+    res.status(200).json({ success: true, emails });
+  });
+});
+
 module.exports = router;

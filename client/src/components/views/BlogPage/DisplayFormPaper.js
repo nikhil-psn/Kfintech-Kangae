@@ -367,7 +367,7 @@ export default function DisplayFormPaper(props) {
                 }}
                 closeMenuOnSelect={false}
                 components={animatedComponents}
-                placeholder="Status"
+                placeholder="Change Status"
                 options={optionsStatus}
                 style={{ padding: "10px" }}
               />
@@ -394,6 +394,7 @@ export default function DisplayFormPaper(props) {
         popupidea={popupidea}
         openPopup={openPopup}
         setOpenPopup={setOpenPopup}
+        refreshValChanged={props.refreshValChanged}
       ></IdeaPopup>
     </div>
   );

@@ -71,6 +71,38 @@ router.get("/getcategories", (req, res) => {
   });
 });
 
+router.post("/getcount", (req, res) => {
+  const query = {};
+  const col = req.body.column;
+  const val = req.body.columnVal;
+  query[col] = val;
+  // console.log("The req params are :: ");
+  // console.log(col);
+  // console.log(val);
+  // console.log(query);
+  Idea.find(query, function (err, ideas) {
+    if (err) return res.status(400).send(err);
+    // console.log(ideas);
+    res.status(200).json({ success: true, ideas });
+  });
+});
+
+// router.get("/getBystatuses", (req, res) => {
+//   Idea.distinct("status").exec((err, categories) => {
+//     if (err) return res.status(400).send(err);
+//     var totals = [];
+//     categories.map((s) => {
+//       Idea.find({ status: s }).exec((err, ideas) => {
+//         if (err) return res.status(400).send(err);
+//         totals = [...totals, ideas.length];
+//       });
+//     });
+//     console.log("the totals is :::");
+//     console.log(totals);
+//     res.status(200).json({ success: true, totals });
+//   });
+// });
+
 router.get("/getstatuses", (req, res) => {
   // console.log("The unique statuses are :: ");
   Idea.distinct("status").exec((err, statuses) => {
@@ -269,6 +301,62 @@ router.post("/likeIdea", (req, res) => {
         console.log(err);
       } else {
         console.log("Liked/unliked idea : ", docs);
+      }
+    }
+  );
+});
+
+router.get("/byDayCounts", (req, res) => {
+  Idea.aggregate(
+    [
+      {
+        $project: {
+          timestamp: {
+            $dateToString: { format: "%Y-%m-%d", date: "$time" },
+          },
+        },
+      },
+      {
+        $group: {
+          _id: { timestamp: "$timestamp" },
+          count: { $sum: 1 },
+        },
+      },
+    ],
+    function (err, docs) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.status(200).json({ success: true, docs });
+        console.log("The counts by day are ::: ", docs);
+      }
+    }
+  );
+});
+
+router.get("/byMonthCounts", (req, res) => {
+  Idea.aggregate(
+    [
+      {
+        $project: {
+          timestamp: {
+            $dateToString: { format: "%Y-%m", date: "$time" },
+          },
+        },
+      },
+      {
+        $group: {
+          _id: { timestamp: "$timestamp" },
+          count: { $sum: 1 },
+        },
+      },
+    ],
+    function (err, docs) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.status(200).json({ success: true, docs });
+        console.log("The counts by month are ::: ", docs);
       }
     }
   );

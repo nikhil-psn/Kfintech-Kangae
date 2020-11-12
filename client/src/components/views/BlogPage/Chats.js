@@ -36,10 +36,12 @@ export default function Chats(props) {
   const newChat = (e) => {
     e.preventDefault();
     const name = prompt("Enter a name for your chat");
-    db.collection("chats").add({
-      name: name,
-      members: user.userData.email.split(" "),
-    });
+    if (name) {
+      db.collection("chats").add({
+        name: name,
+        members: user.userData.email.split(" "),
+      });
+    }
   };
 
   useEffect(() => {

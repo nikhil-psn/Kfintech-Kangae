@@ -33,6 +33,14 @@ import ListItemText from "@material-ui/core/ListItemText";
 import WhatshotIcon from "@material-ui/icons/Whatshot";
 import ForumIcon from "@material-ui/icons/Forum";
 import Chats from "./Chats.js";
+import Analytics from "./Analytics";
+import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
+import WbIncandescentOutlinedIcon from "@material-ui/icons/WbIncandescentOutlined";
+import EmojiObjectsOutlinedIcon from "@material-ui/icons/EmojiObjectsOutlined";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import PersonIcon from "@material-ui/icons/Person";
+import CountUp from "react-countup";
+import "./Chart.css";
 
 const animatedComponents = makeAnimated();
 const optionsSort = [
@@ -76,7 +84,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     maxWidth: 350,
-    backgroundColor: "#e0ebeb",
+    backgroundColor: "#f5f5f0",
   },
   rootTrending: {
     width: "100%",
@@ -115,6 +123,10 @@ export default function DisplayForm(props) {
   const [refreshVal, setRefreshVal] = useState(0);
   const [expanded, setExpanded] = useState(false);
   const [expanded1, setExpanded1] = useState(false);
+  const [ideasImplemented, setIdeasImplemented] = useState(0);
+  const [ideasPosted, setIdeasPosted] = useState(0);
+  const [activeBrainstormers, setActiveBrainstormers] = useState(0);
+
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
@@ -167,6 +179,47 @@ export default function DisplayForm(props) {
       setStatusesSrch(values);
     }
   };
+
+  useEffect(() => {
+    var impCounts = 0;
+    axios
+      .post("/api/ideas/getcount", { column: "status", columnVal: "Deployed" })
+      .then((response) => {
+        if (response.data.success) {
+          // console.log("the count used by UI is :::");
+          // console.log(response.data.ideas);
+          impCounts = response.data.ideas.length;
+          // setCategoryCount(iCounts);
+          console.log("the implemented ideas are ::");
+          console.log(impCounts);
+          setIdeasImplemented(impCounts);
+        }
+      });
+
+    axios.get("/api/users/getEmails").then((response) => {
+      if (response.data.success) {
+        console.log("the total users  fetched are : ");
+        console.log(response.data.emails.length);
+        setActiveBrainstormers(response.data.emails.length);
+      } else {
+        alert("Couldnt get users list");
+      }
+    });
+
+    axios
+      .post("/api/ideas/searchIdeas", {
+        searchStr: "",
+      })
+      .then((response) => {
+        if (response.data.success) {
+          console.log("the total ideas are ::");
+          console.log(response.data.ideas.length);
+          setIdeasPosted(response.data.ideas.length);
+        } else {
+          alert("Couldnt get idea`s lists");
+        }
+      });
+  }, []);
 
   useEffect(() => {
     axios.get("/api/ideas/getcategories").then((response) => {
@@ -448,6 +501,57 @@ export default function DisplayForm(props) {
                 <Chats />
               </CardContent>
             </Collapse>
+            <Grid xs={11}>
+              <Paper
+                elevation={3}
+                style={{ maxWidth: "350px", marginTop: "16px" }}
+              >
+                <div className="users__inflow1">
+                  <div className="inflow__title">Ideas Implemented</div>
+                  <div className="inflow__count">
+                    <CheckCircleIcon style={{ fontSize: "32px" }} />
+                    <CountUp end={ideasImplemented} duration={5} />
+                  </div>
+                  <div className="inflow__percentage">
+                    <ArrowUpwardIcon /> 13.8%
+                  </div>
+                </div>
+              </Paper>
+            </Grid>
+
+            <Grid xs={11}>
+              <Paper
+                elevation={3}
+                style={{ maxWidth: "350px", marginTop: "16px" }}
+              >
+                <div className="users__inflow1">
+                  <div className="inflow__title">Active Brainstormers</div>
+                  <div className="inflow__count">
+                    <PersonIcon style={{ fontSize: "42px" }} />
+                    <CountUp end={activeBrainstormers} duration={5} />
+                  </div>
+                  <div className="inflow__percentage">
+                    <ArrowUpwardIcon /> 13.8%
+                  </div>
+                </div>
+              </Paper>
+            </Grid>
+
+            <Grid xs={11}>
+              <Paper
+                elevation={3}
+                style={{ maxWidth: "350px", marginTop: "16px" }}
+              >
+                <div className="users__inflow1">
+                  <div className="inflow__title">Ideas Posted</div>
+                  <div className="inflow__count">
+                    <EmojiObjectsOutlinedIcon style={{ fontSize: "42px" }} />
+                    <CountUp end={ideasPosted} duration={5} />
+                  </div>
+                  {/* <div className="inflow__percentage"><ArrowUpwardIcon/> 13.8%</div> */}
+                </div>
+              </Paper>
+            </Grid>
           </Grid>
         </Grid>
       </Form>

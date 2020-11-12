@@ -44,6 +44,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function IdeaPopup(props) {
   const user = useSelector((state) => state.user);
+  const [refreshVal, setRefreshVal] = useState(0);
   const [commentVal, setCommentVal] = useState("");
   const [commentsChanged, setCommentsChanged] = useState("");
   const [ideaComments, setIdeaComments] = useState([props.popupidea.comments]);
@@ -56,6 +57,103 @@ export default function IdeaPopup(props) {
 
   const CommentInputChange = (e) => {
     setCommentVal(e.target.value);
+  };
+  const isNikhil = (value) => {
+    return value != "Nikhil";
+  };
+
+  const likeIdea = (idea) => {
+    console.log("liking the post:");
+    console.log(idea._id);
+    if (idea.likes.includes("Nikhil")) {
+      console.log("already liked the idea");
+    } else {
+      if (idea.unlikes.includes("Nikhil")) {
+        const unlikes = idea.unlikes.filter(isNikhil);
+        const likes = idea.likes.push("Nikhil");
+        axios
+          .post("/api/ideas/likeIdea", {
+            ideaId: idea._id,
+            likes: idea.likes,
+            unlikes: unlikes,
+          })
+          .then((response) => {
+            if (response.data.success) {
+              console.log(response.data.idea);
+              console.log(idea.likes);
+              console.log("liked the idea and removed from unliked");
+              props.refreshValChanged(refreshVal + 1);
+            } else {
+              alert("Couldnt unlike the  idea");
+            }
+          });
+      } else {
+        const likes = idea.likes.push("Nikhil");
+        axios
+          .post("/api/ideas/likeIdea", {
+            ideaId: idea._id,
+            likes: idea.likes,
+            unlikes: idea.unlikes,
+          })
+          .then((response) => {
+            if (response.data.success) {
+              console.log(response.data.idea);
+              console.log(idea.likes);
+              console.log("just liked the idea");
+              props.refreshValChanged(refreshVal + 1);
+            } else {
+              alert("Couldnt like the  idea");
+            }
+          });
+      }
+    }
+  };
+
+  const unlikeIdea = (idea) => {
+    console.log("unliked the post:");
+    console.log(idea._id);
+    if (idea.unlikes.includes("Nikhil")) {
+      console.log("already unliked the idea");
+    } else {
+      if (idea.likes.includes("Nikhil")) {
+        const likes = idea.likes.filter(isNikhil);
+        const unlikes = idea.unlikes.push("Nikhil");
+        axios
+          .post("/api/ideas/likeIdea", {
+            ideaId: idea._id,
+            likes: likes,
+            unlikes: idea.unlikes,
+          })
+          .then((response) => {
+            if (response.data.success) {
+              console.log(response.data.idea);
+              console.log(idea.likes);
+              console.log("unliked the idea and removed from liked");
+              props.refreshValChanged(refreshVal + 1);
+            } else {
+              alert("Couldnt unlike the  idea");
+            }
+          });
+      } else {
+        const unlikes = idea.unlikes.push("Nikhil");
+        axios
+          .post("/api/ideas/likeIdea", {
+            ideaId: idea._id,
+            likes: idea.likes,
+            unlikes: idea.unlikes,
+          })
+          .then((response) => {
+            if (response.data.success) {
+              console.log(response.data.idea);
+              console.log(idea.likes);
+              console.log("just unliked the idea");
+              props.refreshValChanged(refreshVal + 1);
+            } else {
+              alert("Couldnt unlike the  idea");
+            }
+          });
+      }
+    }
   };
 
   const addComment = () => {
@@ -173,12 +271,18 @@ export default function IdeaPopup(props) {
               </Typography>
               <Divider style={{ marginTop: "8px", marginBottom: "16px" }} />
               <div className="votes" style={{ flexDirection: "row" }}>
-                <ThumbUpAltIcon style={{ fontSize: 25 }} />
+                <ThumbUpAltIcon
+                  style={{ fontSize: 25 }}
+                  onClick={() => likeIdea(props.popupidea)}
+                />
                 <span className="votescount" style={{ marginRight: 8 }}>
                   {props.popupidea.likes.length -
                     props.popupidea.unlikes.length}
                 </span>
-                <ThumbDownAltIcon style={{ fontSize: 25, marginRight: 40 }} />
+                <ThumbDownAltIcon
+                  style={{ fontSize: 25, marginRight: 40 }}
+                  onClick={() => unlikeIdea(props.popupidea)}
+                />
                 <div
                   style={{
                     cursor: "pointer",

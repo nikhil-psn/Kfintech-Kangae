@@ -10,7 +10,7 @@ import LandingPage from "./views/LandingPage/LandingPage.js";
 import LoginPage from "./views/LoginPage/LoginPage.js";
 import RegisterPage from "./views/RegisterPage/RegisterPage.js";
 import FooterPage from "./views/Footer/FooterPage";
-
+import AnalyticsAdmin from "./views/BlogPage/AnalyticsAdmin";
 import Test from "./views/BlogPage/Test";
 import IdeasPage from "./views/BlogPage/IdeasPage";
 import ProfilePage from "./views/BlogPage/ProfilePage";
@@ -30,6 +30,11 @@ function App() {
               exact
               path="/register"
               component={Auth(RegisterPage, false)}
+            />
+            <Route
+              exact
+              path="/analytics"
+              component={Auth(AnalyticsAdmin, null)}
             />
             <Route exact path="/ideas" component={Auth(IdeasPage, null)} />
             <Route exact path="/profile" component={Auth(ProfilePage, null)} />

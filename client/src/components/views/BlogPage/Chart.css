@@ -1,0 +1,41 @@
+/* .chart__paper{
+    padding :15px;
+      text-align : center;
+      
+} */
+
+.users__inflow {
+  display: flex;
+  flex-direction: column;
+  padding: 6px;
+  align-items: center;
+  height: 263px;
+  justify-content: space-between;
+}
+
+.users__inflow1 {
+  display: flex;
+  flex-direction: column;
+  padding: 6px;
+  align-items: center;
+  font-family: ratiobold;
+  justify-content: space-between;
+}
+
+.inflow__title {
+  font-size: 26px;
+  align-items: left;
+  color: grey;
+}
+
+.inflow__count {
+  font-size: 56px;
+  align-items: left;
+  color: #3c44b1;
+}
+
+.inflow__percentage {
+  font-size: 26px;
+  align-items: left;
+  color: rgb(0, 132, 80);
+}

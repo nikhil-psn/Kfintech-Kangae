@@ -40,7 +40,7 @@ export default function TrendingIdea(props) {
     });
   }, [props.refreshVal]);
 
-  return trending.map((t) => {
+  const trendingList = trending.map((t) => {
     return (
       <div>
         <List
@@ -59,13 +59,19 @@ export default function TrendingIdea(props) {
             <ListItemText className="trending__title">{t.title}</ListItemText>
           </ListItem>
         </List>
-        <IdeaPopup
-          id={t._id + "popup"}
-          popupidea={popupidea}
-          openPopup={openPopup}
-          setOpenPopup={setOpenPopup}
-        ></IdeaPopup>
       </div>
     );
   });
+
+  return (
+    <div>
+      <IdeaPopup
+        id={"trendingpopup"}
+        popupidea={popupidea}
+        openPopup={openPopup}
+        setOpenPopup={setOpenPopup}
+      ></IdeaPopup>
+      {trendingList}
+    </div>
+  );
 }

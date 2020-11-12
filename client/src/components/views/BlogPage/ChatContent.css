@@ -107,3 +107,23 @@
   width: fit-content;
   padding: 5px;
 }
+.invite {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.remove {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.invite-remove {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+#dropdownAdd {
+  flex: 1;
+  padding: 5px;
+}
