@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   AppBar,
   Toolbar,
@@ -17,6 +17,7 @@ import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
 import Avatar from "@material-ui/core/Avatar";
 import { Link } from "react-router-dom";
+import axios from "axios";
 // import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -51,6 +52,16 @@ export default function Header() {
   // const profileButtonClicked = () => {
   //   window.location.assign("/profile");
   // };
+  useEffect(() => {
+    console.log("the logged in user is :::");
+    console.log(user);
+    console.log(user.userData.email);
+  }, []);
+
+  const logout = () => {
+    axios.get("/api/users/logout", { _id: user.userData.id });
+    window.location = "/login";
+  };
 
   return (
     <div className="header__div">
@@ -108,12 +119,12 @@ export default function Header() {
                   <SupervisorAccountIcon fontSize="small" />
                 </IconButton>
               </Link>
-              <Link to="/login">
-                <IconButton>
-                  <PowerSettingsNewIcon />
-                  {/* <PowerSettingsNewIcon style={{ color: "blue" }} /> */}
-                </IconButton>
-              </Link>
+              {/* <Link to="/login"> */}
+              <IconButton onClick={logout}>
+                <PowerSettingsNewIcon />
+                {/* <PowerSettingsNewIcon style={{ color: "blue" }} /> */}
+              </IconButton>
+              {/* </Link> */}
             </Grid>
           </Grid>
         </Toolbar>

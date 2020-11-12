@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Grid } from "@material-ui/core";
 import Controls from "./controls/Controls";
 import { useForm, Form } from "./useForm";
-// import { Editor } from "@tinymce/tinymce-react";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "react-select";
 import IconButton from "@material-ui/core/IconButton";
@@ -19,7 +18,6 @@ import Trending from "./Trending";
 import TrendingIdea from "./TrendingIdea";
 import Card from "@material-ui/core/Card";
 import Paper from "@material-ui/core/Paper";
-// import TypeAheadDropDown from "./SearchBar.js";
 import SearchIcon from "@material-ui/icons/Search";
 import { InputBase } from "@material-ui/core";
 import Collapse from "@material-ui/core/Collapse";
@@ -62,12 +60,9 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     padding: theme.spacing(2),
     marginBottom: theme.spacing(2),
-    //textAlign: 'center',
     color: "black",
   },
   searchInput: {
-    //opacity: '0.6',
-    // padding: `10px ${theme.spacing(1)}px`,
     backgroundColor: "#f2f2f2",
     marginTop: "1px",
     marginBottom: "1px",
@@ -270,42 +265,10 @@ export default function DisplayForm(props) {
     console.log("the value in search field is changed to :: ");
     console.log(e.target.value);
   };
-  const searchTriggered = () => {
-    console.log("The value triggering the search is ::");
-    console.log(document.getElementById("searchBar").value);
-    setCategoriesSrch(categories);
-    setStatusesSrch(statuses);
-    axios
-      .post("/api/ideas/searchIdeas", {
-        searchStr: document.getElementById("searchBar").value,
-      })
-      .then((response) => {
-        if (response.data.success) {
-          console.log(response.data.ideas);
-          setIdeas(response.data.ideas);
-        } else {
-          alert("Couldnt get idea`s lists");
-        }
-      });
-  };
+
   const searchingNow = (e) => {
     e.preventDefault();
-    console.log("The value triggering the search is ::");
-    console.log(document.getElementById("searchBar").value);
-    setCategoriesSrch(categories);
-    setStatusesSrch(statuses);
-    axios
-      .post("/api/ideas/searchIdeas", {
-        searchStr: document.getElementById("searchBar").value,
-      })
-      .then((response) => {
-        if (response.data.success) {
-          console.log(response.data.ideas);
-          setIdeas(response.data.ideas);
-        } else {
-          alert("Couldnt get idea`s lists");
-        }
-      });
+    setRefreshVal(refreshVal + 1);
   };
 
   useEffect(() => {
@@ -318,6 +281,7 @@ export default function DisplayForm(props) {
       sSrch: sSrch,
       col: sort.split(" ")[0],
       val: parseInt(sort.split(" ")[1]),
+      searchStr: document.getElementById("searchBar").value,
     };
     console.log("the axios params are : ");
     console.log(variables);

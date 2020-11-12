@@ -2,54 +2,59 @@ import React, { useState, useEffect } from "react";
 import { Grid } from "@material-ui/core";
 import Controls from "./controls/Controls";
 import { useForm, Form } from "./useForm";
-import { Editor } from "@tinymce/tinymce-react";
-import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
-// import Select from '@material-ui/core/Select';
 import Select from "react-select";
 import IconButton from "@material-ui/core/IconButton";
-import InputBase from "@material-ui/core/InputBase";
-import SearchIcon from "@material-ui/icons/Search";
 import axios from "axios";
 import { Divider } from "@material-ui/core";
-import "./Test.css";
-import TypeAheadDropDown from "./SearchBar.js";
 import makeAnimated from "react-select/animated";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import { blue, red } from "@material-ui/core/colors";
+import { useSelector } from "react-redux";
 import "./DisplayForm.css";
 import "./DisplayFormPaper.css";
 import DisplayFormPaper from "./DisplayFormPaper.js";
 import Trending from "./Trending";
-// import { makeStyles } from "@material-ui/core/styles";
+import TrendingIdea from "./TrendingIdea";
 import Card from "@material-ui/core/Card";
-import Header from "./Header";
 import Paper from "@material-ui/core/Paper";
-import { useSelector } from "react-redux";
-
-const optionsSort = [
-  { value: "Date 1", label: "Date ⬆" },
-  { value: "Likes 1", label: "Likes ⬆" },
-  { value: "Comments 1", label: "Comments ⬆" },
-  { value: "Category 1", label: "Category ⬆" },
-  { value: "Status 1", label: "Status ⬆" },
-  { value: "Title 1", label: "Title ⬆" },
-  { value: "Date -1", label: "Date ⬇" },
-  { value: "Likes -1", label: "Likes ⬇" },
-  { value: "Comments -1", label: "Comments ⬇" },
-  { value: "Category -1", label: "Category ⬇" },
-  { value: "Status -1", label: "Status ⬇" },
-  { value: "Title -1", label: "Title ⬇" },
-];
+import SearchIcon from "@material-ui/icons/Search";
+import { InputBase } from "@material-ui/core";
+import Collapse from "@material-ui/core/Collapse";
+import Typography from "@material-ui/core/Typography";
+import CardContent from "@material-ui/core/CardContent";
+import ExpandMoreSharpIcon from "@material-ui/icons/ExpandMoreSharp";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import WhatshotIcon from "@material-ui/icons/Whatshot";
+import ForumIcon from "@material-ui/icons/Forum";
+import Chats from "./Chats.js";
+import Analytics from "./Analytics";
+import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
+import WbIncandescentOutlinedIcon from "@material-ui/icons/WbIncandescentOutlined";
+import EmojiObjectsOutlinedIcon from "@material-ui/icons/EmojiObjectsOutlined";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import PersonIcon from "@material-ui/icons/Person";
+import CountUp from "react-countup";
+import "./Chart.css";
+import Header from "./Header";
 
 const animatedComponents = makeAnimated();
+const optionsSort = [
+  { value: "time 1", label: "Date ⬆" },
+  { value: "likes 1", label: "Likes ⬆" },
+  { value: "category 1", label: "Category ⬆" },
+  { value: "status 1", label: "Status ⬆" },
+  { value: "time -1", label: "Date ⬇" },
+  { value: "likes -1", label: "Likes ⬇" },
+  { value: "category -1", label: "Category ⬇" },
+  { value: "status -1", label: "Status ⬇" },
+];
 
 const useStyles = makeStyles((theme) => ({
-  appMain: {
-    paddingLeft: "0px",
-    width: "100%",
-  },
   pageContent: {
     margin: theme.spacing(5),
     padding: theme.spacing(3),
@@ -57,13 +62,13 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     padding: theme.spacing(2),
     marginBottom: theme.spacing(2),
-    //textAlign: 'center',
     color: "black",
   },
   searchInput: {
-    //opacity: '0.6',
-    padding: `10px ${theme.spacing(1)}px`,
     backgroundColor: "#f2f2f2",
+    marginTop: "1px",
+    marginBottom: "1px",
+    height: "39px",
     borderRadius: "5px",
     fontSize: "1rem",
     "&:hover": {
@@ -76,7 +81,12 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     maxWidth: 350,
-    backgroundColor: "#e0ebeb",
+    backgroundColor: "#f5f5f0",
+  },
+  rootTrending: {
+    width: "100%",
+    maxWidth: 360,
+    backgroundColor: theme.palette.background.paper,
   },
   media: {
     height: 0,
@@ -95,29 +105,39 @@ const useStyles = makeStyles((theme) => ({
   avatar: {
     backgroundColor: blue[800],
   },
+  appMain: {
+    paddingLeft: "0px",
+    width: "100%",
+  },
 }));
 
-function IdeasPage() {
+export default function DisplayForm(props) {
   const user = useSelector((state) => state.user);
   const classes = useStyles();
-  const name = user.userData.email;
   const [votes, setVotes] = useState(4);
   const [categories, setCategories] = useState([]);
   const [statuses, setStatuses] = useState([]);
   const [ideas, setIdeas] = useState([]);
   const [categoriesSrch, setCategoriesSrch] = useState([]);
   const [statusesSrch, setStatusesSrch] = useState([]);
-  const [expanded, setExpanded] = React.useState(false);
   const [titlesDropdown, setTitlesDropdown] = useState([]);
   const [sort, setSort] = useState("time -1");
+  const [refreshVal, setRefreshVal] = useState(0);
+  const [expanded, setExpanded] = useState(false);
+  const [expanded1, setExpanded1] = useState(false);
+  const [ideasImplemented, setIdeasImplemented] = useState(0);
+  const [ideasPosted, setIdeasPosted] = useState(0);
+  const [activeBrainstormers, setActiveBrainstormers] = useState(0);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+  const handleExpandClick1 = () => {
+    setExpanded1(!expanded1);
+  };
 
-  const cardClicked = (e) => {
-    // console.log("The card is clicked  ::"  )
-    // console.log(e.title)
+  const refreshValChanged = (newValue) => {
+    setRefreshVal(newValue);
   };
 
   const [state, setState] = React.useState({
@@ -163,6 +183,13 @@ function IdeasPage() {
   };
 
   useEffect(() => {
+    if (user.userData) {
+    } else {
+      window.location = "/login";
+    }
+  }, []);
+
+  useEffect(() => {
     axios.get("/api/ideas/getcategories").then((response) => {
       if (response.data.success) {
         console.log("the categories fetched are : ");
@@ -205,29 +232,16 @@ function IdeasPage() {
         setStatuses([]);
       }
     });
-  }, []);
+  }, [refreshVal]);
 
   const searchValue = (e) => {
     console.log("the value in search field is changed to :: ");
     console.log(e.target.value);
   };
-  const searchTriggered = () => {
-    console.log("The value triggering the search is ::");
-    console.log(document.getElementById("searchBar").value);
-    setCategoriesSrch(categories);
-    setStatusesSrch(statuses);
-    axios
-      .post("/api/ideas/searchIdeas", {
-        searchStr: document.getElementById("searchBar").value,
-      })
-      .then((response) => {
-        if (response.data.success) {
-          console.log(response.data.ideas);
-          setIdeas(response.data.ideas);
-        } else {
-          alert("Couldnt get idea`s lists");
-        }
-      });
+
+  const searchingNow = (e) => {
+    e.preventDefault();
+    setRefreshVal(refreshVal + 1);
   };
 
   useEffect(() => {
@@ -236,12 +250,12 @@ function IdeasPage() {
     const cSrch = categoriesSrch.length > 0 ? categoriesSrch : categories1;
     const sSrch = statusesSrch.length > 0 ? statusesSrch : statuses1;
     const variables = {
-      email: user.userData.email,
-
       cSrch: cSrch,
       sSrch: sSrch,
       col: sort.split(" ")[0],
       val: parseInt(sort.split(" ")[1]),
+      searchStr: document.getElementById("searchBar").value,
+      email: user.userData.email,
     };
     console.log("the axios params are : ");
     console.log(variables);
@@ -255,7 +269,7 @@ function IdeasPage() {
       }
     });
     // },[sort]);
-  }, [sort, categories, statuses, categoriesSrch, statusesSrch]);
+  }, [sort, categories, statuses, categoriesSrch, statusesSrch, refreshVal]);
 
   return (
     <div style={{ backgroundColor: "rgb(60,68,177)", paddingBottom: "15px" }}>
@@ -268,32 +282,24 @@ function IdeasPage() {
         <Paper className={classes.pageContent}>
           <Form style={{ height: "100%" }}>
             <Grid container spacing={3} style={{ paddingBottom: "25px" }}>
-              <Grid
-                xs={3}
-                style={{
-                  alignContent: "center",
-                  paddingTop: "10.5px",
-                  paddingLeft: "15px",
-                }}
-              >
-                {/* <InputBase
-                    placeholder="Search topics"
+              <Grid xs={3} style={{ paddingTop: "7px", paddingLeft: "9px" }}>
+                <form onSubmit={searchingNow}>
+                  <InputBase
+                    style={{ fontFamily: "ratiomedium" }}
+                    placeholder="Search ideas"
+                    id="searchBar"
                     className={classes.searchInput}
-                    startAdornment={<SearchIcon fontSize="medium"  style={{color:"blue"}}/>}
-                    style={{color:"black"}}
-                /> */}
-                <TypeAheadDropDown
-                  id="searchDropdown"
-                  iteams={titlesDropdown}
-                  onChange={searchValue}
-                />
-                <IconButton aria-label="search" onClick={searchTriggered}>
-                  <SearchIcon />
-                </IconButton>
+                    startAdornment={
+                      <SearchIcon fontSize="medium" style={{ color: "blue" }} />
+                    }
+                    style={{ color: "black" }}
+                  />
+                </form>
               </Grid>
               <Grid xs={3} sm={3}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <Select
+                    style={{ fontFamily: "ratiomedium" }}
                     id="dropdownSort"
                     className="sort__by"
                     onChange={SortChanged}
@@ -307,8 +313,8 @@ function IdeasPage() {
               </Grid>
               <Grid xs={3} sm={3}>
                 <FormControl variant="outlined" className={classes.formControl}>
-                  {/* <InputLabel htmlFor="outlined-age-native-simple">State</InputLabel> */}
                   <Select
+                    style={{ fontFamily: "ratiomedium" }}
                     id="dropdown2"
                     onChange={itemClickedCategory}
                     closeMenuOnSelect={false}
@@ -323,6 +329,7 @@ function IdeasPage() {
               <Grid xs={3} sm={3}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <Select
+                    style={{ fontFamily: "ratiomedium" }}
                     id="dropdown2"
                     onChange={itemClickedStatus}
                     closeMenuOnSelect={false}
@@ -345,7 +352,162 @@ function IdeasPage() {
                 sm={8}
                 style={{ paddingLeft: "10px" }}
               >
-                <DisplayFormPaper ideas={ideas} />
+                <DisplayFormPaper
+                  admin={props.admin}
+                  refreshVal={refreshVal}
+                  refreshValChanged={refreshValChanged}
+                  ideas={ideas}
+                />
+              </Grid>
+              <Grid
+                xs={4}
+                style={{ paddingLeft: "20px", paddingRight: "10px" }}
+              >
+                <List
+                  component="nav"
+                  className={classes.rootTrending}
+                  aria-label="contacts"
+                >
+                  <ListItem button onClick={handleExpandClick}>
+                    <ListItemIcon>
+                      <WhatshotIcon
+                        fontSize="large"
+                        style={{ color: "#3C44B1" }}
+                      />
+                    </ListItemIcon>
+                    <ListItemText fontSize="large">
+                      {" "}
+                      <strong
+                        style={{
+                          fontSize: "22px",
+                          fontFamily: "ratiobold",
+                          color: "#3C44B1",
+                        }}
+                      >
+                        Trending
+                      </strong>
+                    </ListItemText>
+                    <IconButton
+                      className={clsx(classes.expand, {
+                        [classes.expandOpen]: expanded,
+                      })}
+                      onClick={handleExpandClick}
+                      aria-expanded={expanded}
+                      aria-label="show more"
+                    >
+                      <ExpandMoreSharpIcon />
+                    </IconButton>
+                  </ListItem>
+                </List>
+                <Collapse
+                  className={classes.root}
+                  in={expanded}
+                  timeout="auto"
+                  unmountOnExit
+                >
+                  <CardContent className="collapse__card">
+                    <TrendingIdea refreshVal={refreshVal} />
+                  </CardContent>
+                </Collapse>
+                <List
+                  component="nav"
+                  className={classes.rootTrending}
+                  aria-label="contacts"
+                >
+                  <ListItem button onClick={handleExpandClick1}>
+                    <ListItemIcon>
+                      <ForumIcon
+                        fontSize="large"
+                        style={{ color: "#3C44B1" }}
+                      />
+                    </ListItemIcon>
+                    <ListItemText fontSize="large">
+                      {" "}
+                      <strong
+                        style={{
+                          fontSize: "22px",
+                          color: "#3C44B1",
+                          fontFamily: "ratiobold",
+                        }}
+                      >
+                        Chats
+                      </strong>
+                    </ListItemText>
+                    <IconButton
+                      className={clsx(classes.expand, {
+                        [classes.expandOpen]: expanded1,
+                      })}
+                      onClick={handleExpandClick1}
+                      aria-expanded={expanded1}
+                      aria-label="show more"
+                    >
+                      <ExpandMoreSharpIcon />
+                    </IconButton>
+                  </ListItem>
+                </List>
+                <Collapse
+                  className={classes.root}
+                  in={expanded1}
+                  timeout="auto"
+                  unmountOnExit
+                >
+                  <CardContent>
+                    <Chats />
+                  </CardContent>
+                </Collapse>
+                <Grid xs={11}>
+                  <Paper
+                    elevation={3}
+                    style={{ maxWidth: "350px", marginTop: "16px" }}
+                  >
+                    <div className="users__inflow1">
+                      <div className="inflow__title">Ideas Implemented</div>
+                      <div className="inflow__count">
+                        <CheckCircleIcon style={{ fontSize: "32px" }} />
+                        <CountUp end={ideasImplemented} duration={5} />
+                      </div>
+                      <div className="inflow__percentage">
+                        <ArrowUpwardIcon /> 13.8%
+                      </div>
+                    </div>
+                  </Paper>
+                </Grid>
+
+                <Grid xs={11}>
+                  <Paper
+                    elevation={3}
+                    style={{ maxWidth: "350px", marginTop: "16px" }}
+                  >
+                    <div className="users__inflow1">
+                      <div className="inflow__title">Active Brainstormers</div>
+                      <div className="inflow__count">
+                        <PersonIcon style={{ fontSize: "42px" }} />
+                        <CountUp end={activeBrainstormers} duration={5} />
+                      </div>
+                      <div className="inflow__percentage">
+                        <ArrowUpwardIcon /> 13.8%
+                      </div>
+                    </div>
+                  </Paper>
+                </Grid>
+
+                <Grid xs={11}>
+                  <Paper
+                    elevation={3}
+                    style={{ maxWidth: "350px", marginTop: "16px" }}
+                  >
+                    <div className="users__inflow1">
+                      <div className="inflow__title">Ideas Posted</div>
+                      <div className="inflow__count">
+                        <EmojiObjectsOutlinedIcon
+                          style={{ fontSize: "42px" }}
+                        />
+                        <CountUp end={ideasPosted} duration={5} />
+                      </div>
+                      {/* <div className="inflow__percentage"><ArrowUpwardIcon/> 13.8%</div> */}
+                    </div>
+                  </Paper>
+                </Grid>
               </Grid>
             </Grid>
           </Form>
@@ -354,5 +516,3 @@ function IdeasPage() {
     </div>
   );
 }
-
-export default IdeasPage;

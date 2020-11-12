@@ -25,7 +25,7 @@ function App() {
         <div>
           <Switch>
             <Route exact path="/" component={Auth(LandingPage, null)} />
-            <Route exact path="/login" component={Auth(LoginPage, null)} />
+            <Route exact path="/login" component={Auth(LoginPage, false)} />
             <Route
               exact
               path="/register"
@@ -34,13 +34,12 @@ function App() {
             <Route
               exact
               path="/analytics"
-              component={Auth(AnalyticsAdmin, null)}
+              component={Auth(AnalyticsAdmin, true)}
             />
-            <Route exact path="/ideas" component={Auth(IdeasPage, null)} />
-            <Route exact path="/profile" component={Auth(ProfilePage, null)} />
-            <Route exact path="/newIdea" component={Auth(NewIdeaPage, null)} />
-            <Route exact path="/admin" component={Auth(AdminPage, null)} />
-            <Route exact path="/test" component={Auth(Test, null)} />
+            <Route exact path="/ideas" component={Auth(IdeasPage, true)} />
+            <Route exact path="/profile" component={Auth(ProfilePage, true)} />
+            <Route exact path="/newIdea" component={Auth(NewIdeaPage, true)} />
+            <Route exact path="/admin" component={Auth(AdminPage, true)} />
           </Switch>
         </div>
       </Router>

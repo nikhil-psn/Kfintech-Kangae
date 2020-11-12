@@ -29,7 +29,36 @@ export default function Chart(props) {
   const [categoryCount, setCategoryCount] = useState([]);
   const [statusCount, setStatusCount] = useState([]);
   const [ideasPosted, setIdeasPosted] = useState(0);
+  const [ideasGrowth, setIdeasGrowth] = useState(0);
+  const [usersGrowth, setUsersGrowth] = useState(0);
   const [activeBrainstormers, setActiveBrainstormers] = useState(0);
+
+  useEffect(() => {
+    axios.get("/api/ideas/getOldIdeas").then((response) => {
+      if (response.data.success) {
+        console.log("the ideas are ::");
+        console.log(response.data.ideas.length);
+        setIdeasGrowth(
+          ((ideasPosted - response.data.ideas.length) * 100) /
+            response.data.ideas.length
+        );
+      } else {
+        alert("Couldnt get idea`s lists");
+      }
+    });
+    axios.get("/api/ideas/getOldUsers").then((response) => {
+      if (response.data.success) {
+        console.log("the ideas are ::");
+        console.log(response.data.ideas.length);
+        setUsersGrowth(
+          ((activeBrainstormers - response.data.ideas.length) * 100) /
+            response.data.ideas.length
+        );
+      } else {
+        alert("Couldnt get idea`s lists");
+      }
+    });
+  }, [ideasPosted, activeBrainstormers]);
 
   useEffect(() => {
     axios
@@ -246,7 +275,7 @@ export default function Chart(props) {
                 <CountUp end={activeBrainstormers} duration={5} />
               </div>
               <div className="inflow__percentage">
-                <ArrowUpwardIcon /> 24.5%
+                <ArrowUpwardIcon /> {usersGrowth}%
               </div>
             </div>
           </Paper>
@@ -302,7 +331,7 @@ export default function Chart(props) {
                 <CountUp end={ideasPosted} duration={5} />
               </div>
               <div className="inflow__percentage">
-                <ArrowUpwardIcon /> 24.5%
+                <ArrowUpwardIcon /> {ideasGrowth}%
               </div>
             </div>
           </Paper>

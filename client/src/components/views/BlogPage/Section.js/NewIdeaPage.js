@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Employees from "./Employees";
 import Header from "../Header.js";
-
+import { useSelector } from "react-redux";
 import {
   makeStyles,
   CssBaseline,
@@ -18,6 +18,14 @@ const useStyles = makeStyles({
 
 function NewIdeaPage() {
   const classes = useStyles();
+  const user = useSelector((state) => state.user);
+
+  useEffect(() => {
+    if (user.userData) {
+    } else {
+      window.location = "/login";
+    }
+  }, []);
 
   return (
     <div style={{ minHeight: "100vh" }}>

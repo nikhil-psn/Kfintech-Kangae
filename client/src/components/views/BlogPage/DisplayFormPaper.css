@@ -22,6 +22,11 @@
   overflow-wrap: break-word;
   font-size: medium;
 }
+.post__content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
 
 /* .paper :hover {
   background-color: aliceblue;

@@ -69,6 +69,15 @@ router.get("/logout", auth, (req, res) => {
   );
 });
 
+router.get("/getOldUsers", (req, res) => {
+  var date = new Date();
+  date.setDate(date.getDate() - 1);
+  User.aggregate([{ $match: { time: { $lte: date } } }]).exec((err, ideas) => {
+    if (err) return res.status(400).send(err);
+    res.status(200).json({ success: true, ideas });
+  });
+});
+
 router.get("/getEmails", (req, res) => {
   // console.log("The unique titles are :: ");
   User.distinct("email").exec((err, emails) => {

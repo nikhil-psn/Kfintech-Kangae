@@ -71,21 +71,16 @@ function LandingPage() {
 
         <ul className="homepagetiles">
           <li>
-            <a href="#">
+            <Link to="/login">
               <span></span>
               <span></span>
               <span></span>
               <span></span>
               <span>
-                <h5>
-                  <EmojiObjectsOutlinedIcon
-                    style={{ fontSize: "60px" }}
-                    color="white"
-                  />
-                </h5>
+                <h5>Login</h5>
                 {/* <h5><ArrowForwardIosIcon style={{ fontSize: 30 }}/></h5> */}
               </span>
-            </a>
+            </Link>
           </li>
           <li>
             <Link to="/ideas">
@@ -94,7 +89,14 @@ function LandingPage() {
               <span></span>
               <span></span>
               <span class="fab fa-facebook-f">
-                <h5>View Ideas</h5>
+                <h5>
+                  {" "}
+                  <EmojiObjectsOutlinedIcon
+                    style={{ fontSize: "60px" }}
+                    color="white"
+                  />
+                  View Ideas
+                </h5>
               </span>
             </Link>
           </li>
@@ -106,23 +108,24 @@ function LandingPage() {
               <span></span>
               <span class="fab fa-twitter">
                 {" "}
-                <h5>Got an Idea?</h5>
-              </span>
-            </Link>
-          </li>
-          <li>
-            <Link to="/test">
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-              <span class="fab fa-twitch">
                 <h5>
                   <WbIncandescentOutlinedIcon
                     style={{ fontSize: "60px", transform: "rotate(180deg)" }}
                     color="white"
                   />
+                  Got an Idea?
                 </h5>
+              </span>
+            </Link>
+          </li>
+          <li>
+            <Link to="/register">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span class="fab fa-twitch">
+                <h5>New User?</h5>
                 {/* <h5><ArrowBackIosIcon  style={{ fontSize: 30 }}/> </h5> */}
               </span>
             </Link>

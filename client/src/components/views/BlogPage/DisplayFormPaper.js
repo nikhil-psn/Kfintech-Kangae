@@ -342,16 +342,22 @@ export default function DisplayFormPaper(props) {
                 }}
                 component="h3"
               >
-                {some_idea.title}
+                {some_idea.title} {"  "}
+                {"  "}
               </Typography>
             </div>
             <div className="post__status">
+              <div>
+                <span className="dept">{some_idea.category}</span>
+              </div>
               Submitted by{" "}
               <strong>
                 {some_idea.anonymous ? "An anonymous person" : some_idea.email}
               </strong>{" "}
               | Created at <strong>{some_idea.time}</strong> |{" "}
-              <span className="dept">{some_idea.category}</span>
+              <div>
+                <span className="dept">{some_idea.status}</span>
+              </div>
             </div>
           </div>
           {props.admin && (

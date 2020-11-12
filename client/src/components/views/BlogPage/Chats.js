@@ -47,6 +47,7 @@ export default function Chats(props) {
   useEffect(() => {
     db.collection("chats")
       .where("members", "array-contains", user.userData.email)
+      // .sort()
       .onSnapshot((snapshot) => {
         setChats(
           snapshot.docs.map((doc) => ({

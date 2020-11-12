@@ -54,19 +54,15 @@ router.post("/uploadfiles", (req, res) => {
 });
 
 router.get("/gettitles", (req, res) => {
-  // console.log("The unique titles are :: ");
   Idea.distinct("title").exec((err, titles) => {
     if (err) return res.status(400).send(err);
-    // console.log(titles)
     res.status(200).json({ success: true, titles });
   });
 });
 
 router.get("/getcategories", (req, res) => {
-  // console.log("The unique categories are :: ");
   Idea.distinct("category").exec((err, categories) => {
     if (err) return res.status(400).send(err);
-    // console.log(categories)
     res.status(200).json({ success: true, categories });
   });
 });
@@ -76,38 +72,15 @@ router.post("/getcount", (req, res) => {
   const col = req.body.column;
   const val = req.body.columnVal;
   query[col] = val;
-  // console.log("The req params are :: ");
-  // console.log(col);
-  // console.log(val);
-  // console.log(query);
   Idea.find(query, function (err, ideas) {
     if (err) return res.status(400).send(err);
-    // console.log(ideas);
     res.status(200).json({ success: true, ideas });
   });
 });
 
-// router.get("/getBystatuses", (req, res) => {
-//   Idea.distinct("status").exec((err, categories) => {
-//     if (err) return res.status(400).send(err);
-//     var totals = [];
-//     categories.map((s) => {
-//       Idea.find({ status: s }).exec((err, ideas) => {
-//         if (err) return res.status(400).send(err);
-//         totals = [...totals, ideas.length];
-//       });
-//     });
-//     console.log("the totals is :::");
-//     console.log(totals);
-//     res.status(200).json({ success: true, totals });
-//   });
-// });
-
 router.get("/getstatuses", (req, res) => {
-  // console.log("The unique statuses are :: ");
   Idea.distinct("status").exec((err, statuses) => {
     if (err) return res.status(400).send(err);
-    // console.log(statuses)
     res.status(200).json({ success: true, statuses });
   });
 });
@@ -137,7 +110,6 @@ router.post("/searchIdeas", (req, res) => {
   Idea.find({
     title: { $regex: ".*" + req.body.searchStr + ".*", $options: "i" },
   }).exec((err, ideas) => {
-    // Idea.find().exec((err, ideas) => {
     if (err) return res.status(400).send(err);
     res.status(200).json({ success: true, ideas });
     console.log("the request body is : ");
@@ -161,6 +133,15 @@ router.post("/addComment", (req, res) => {
   });
 });
 
+router.get("/getOldIdeas", (req, res) => {
+  var date = new Date();
+  date.setDate(date.getDate() - 1);
+  Idea.aggregate([{ $match: { time: { $lte: date } } }]).exec((err, ideas) => {
+    if (err) return res.status(400).send(err);
+    res.status(200).json({ success: true, ideas });
+  });
+});
+
 router.post("/getIdeas", (req, res) => {
   const query = {};
   const col = req.body.col;
@@ -170,6 +151,13 @@ router.post("/getIdeas", (req, res) => {
   if (col == "likes") {
     if (val == "-1") {
       Idea.aggregate([
+        {
+          $match: {
+            status: { $in: req.body.sSrch },
+            category: { $in: req.body.cSrch },
+            title: { $regex: ".*" + req.body.searchStr + ".*", $options: "i" },
+          },
+        },
         {
           $addFields: {
             answers_count: {
@@ -191,6 +179,13 @@ router.post("/getIdeas", (req, res) => {
     } else {
       Idea.aggregate([
         {
+          $match: {
+            status: { $in: req.body.sSrch },
+            category: { $in: req.body.cSrch },
+            title: { $regex: ".*" + req.body.searchStr + ".*", $options: "i" },
+          },
+        },
+        {
           $addFields: {
             answers_count: {
               $subtract: [
@@ -209,36 +204,97 @@ router.post("/getIdeas", (req, res) => {
         console.log(ideas);
       });
     }
-  }
-  // Idea.find()
-  else
+  } else
     Idea.find({
+      title: { $regex: ".*" + req.body.searchStr + ".*", $options: "i" },
       status: { $in: req.body.sSrch },
       category: { $in: req.body.cSrch },
     })
       .sort(query)
       .exec((err, ideas) => {
-        // Idea.find().exec((err, ideas) => {
         if (err) return res.status(400).send(err);
         res.status(200).json({ success: true, ideas });
-        // console.log("the request body is : ");
-        // console.log(req.body);
-        // console.log("The ideas found are : Server");
         console.log(ideas);
       });
 });
 
 router.post("/getMyIdeas", (req, res) => {
-  Idea.find({ email: req.body.email })
-    .sort({ time: -1 })
-    .exec((err, ideas) => {
-      if (err) return res.status(400).send(err);
-      res.status(200).json({ success: true, ideas });
-      // console.log("the request body is : ");
-      // console.log(req.body);
-      // console.log("The ideas found are : ");
-      // console.log(ideas);
-    });
+  const query = {};
+  const col = req.body.col;
+  const val = req.body.val;
+  query[col] = val;
+  console.log(query);
+  if (col == "likes") {
+    if (val == "-1") {
+      Idea.aggregate([
+        {
+          $match: {
+            email: req.body.email,
+            title: { $regex: ".*" + req.body.searchStr + ".*", $options: "i" },
+            status: { $in: req.body.sSrch },
+            category: { $in: req.body.cSrch },
+          },
+        },
+        {
+          $addFields: {
+            answers_count: {
+              $subtract: [
+                { $size: { $ifNull: ["$likes", []] } },
+                { $size: { $ifNull: ["$unlikes", []] } },
+              ],
+            },
+          },
+        },
+        {
+          $sort: { answers_count: -1 },
+        },
+      ]).exec((err, ideas) => {
+        if (err) return res.status(400).send(err);
+        res.status(200).json({ success: true, ideas });
+        console.log(ideas);
+      });
+    } else {
+      Idea.aggregate([
+        {
+          $match: {
+            email: req.body.email,
+            title: { $regex: ".*" + req.body.searchStr + ".*", $options: "i" },
+            status: { $in: req.body.sSrch },
+            category: { $in: req.body.cSrch },
+          },
+        },
+        {
+          $addFields: {
+            answers_count: {
+              $subtract: [
+                { $size: { $ifNull: ["$likes", []] } },
+                { $size: { $ifNull: ["$unlikes", []] } },
+              ],
+            },
+          },
+        },
+        {
+          $sort: { answers_count: 1 },
+        },
+      ]).exec((err, ideas) => {
+        if (err) return res.status(400).send(err);
+        res.status(200).json({ success: true, ideas });
+        console.log(ideas);
+      });
+    }
+  } else
+    Idea.find({
+      email: req.body.email,
+      title: { $regex: ".*" + req.body.searchStr + ".*", $options: "i" },
+      status: { $in: req.body.sSrch },
+      category: { $in: req.body.cSrch },
+    })
+      .sort(query)
+      .exec((err, ideas) => {
+        if (err) return res.status(400).send(err);
+        res.status(200).json({ success: true, ideas });
+        console.log(ideas);
+      });
 });
 
 router.get("/getTrending", (req, res) => {
@@ -260,11 +316,8 @@ router.get("/getTrending", (req, res) => {
       $sort: { answers_count: -1 },
     },
   ]).exec((err, ideas) => {
-    // Idea.find().exec((err, ideas) => {
     if (err) return res.status(400).send(err);
     res.status(200).json({ success: true, ideas });
-    // console.log("The ideas found are : ");
-    // console.log(ideas);
   });
 });
 
