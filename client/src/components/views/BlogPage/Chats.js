@@ -9,7 +9,6 @@ import WhatshotIcon from "@material-ui/icons/Whatshot";
 import ChatPopup from "./controls/ChatPopup";
 import { useSelector } from "react-redux";
 import MessageIcon from "@material-ui/icons/Message";
-
 import "./TrendingIdea.css";
 import { db } from "../../firebase.js";
 

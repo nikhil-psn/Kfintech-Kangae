@@ -182,12 +182,12 @@ export default function DisplayForm(props) {
     }
   };
 
-  useEffect(() => {
-    if (user.userData) {
-    } else {
-      window.location = "/login";
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (user.userData) {
+  //   } else {
+  //     window.location = "/login";
+  //   }
+  // }, []);
 
   useEffect(() => {
     axios.get("/api/ideas/getcategories").then((response) => {
@@ -363,52 +363,6 @@ export default function DisplayForm(props) {
                 xs={4}
                 style={{ paddingLeft: "20px", paddingRight: "10px" }}
               >
-                <List
-                  component="nav"
-                  className={classes.rootTrending}
-                  aria-label="contacts"
-                >
-                  <ListItem button onClick={handleExpandClick}>
-                    <ListItemIcon>
-                      <WhatshotIcon
-                        fontSize="large"
-                        style={{ color: "#3C44B1" }}
-                      />
-                    </ListItemIcon>
-                    <ListItemText fontSize="large">
-                      {" "}
-                      <strong
-                        style={{
-                          fontSize: "22px",
-                          fontFamily: "ratiobold",
-                          color: "#3C44B1",
-                        }}
-                      >
-                        Trending
-                      </strong>
-                    </ListItemText>
-                    <IconButton
-                      className={clsx(classes.expand, {
-                        [classes.expandOpen]: expanded,
-                      })}
-                      onClick={handleExpandClick}
-                      aria-expanded={expanded}
-                      aria-label="show more"
-                    >
-                      <ExpandMoreSharpIcon />
-                    </IconButton>
-                  </ListItem>
-                </List>
-                <Collapse
-                  className={classes.root}
-                  in={expanded}
-                  timeout="auto"
-                  unmountOnExit
-                >
-                  <CardContent className="collapse__card">
-                    <TrendingIdea refreshVal={refreshVal} />
-                  </CardContent>
-                </Collapse>
                 <List
                   component="nav"
                   className={classes.rootTrending}

@@ -1,3 +1,35 @@
 .MuiMenuItem-root {
   min-width: 652px;
+  font-family: ratiomedium !important;
+}
+
+.MuiInputLabel-root,
+.MuiTypography-h6,
+.MuiTypography-h5,
+.makeStyles-label-23 {
+  font-family: ratiobold !important;
+}
+
+.MuiTypography-subtitle2,
+.MuiTypography-body1,
+.MuiTypography-body2 {
+  font-family: ratiomedium !important;
+}
+
+.ql-toolbar.ql-snow {
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+  width: 90%;
+  margin-left: 6.5px;
+}
+
+.ql-container.ql-snow {
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  width: 90%;
+  margin-left: 6.5px;
+}
+
+.makeStyles-pageHeader-8 {
+  background-color: whitesmoke !important;
 }

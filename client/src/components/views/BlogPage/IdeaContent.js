@@ -24,6 +24,8 @@ import TextField from "@material-ui/core/TextField";
 import SendIcon from "@material-ui/icons/Send";
 import parse from "html-react-parser";
 import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
+// import { useHistory, hashHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
@@ -45,10 +47,13 @@ const useStyles = makeStyles((theme) => ({
 export default function IdeaPopup(props) {
   const user = useSelector((state) => state.user);
   const [refreshVal, setRefreshVal] = useState(0);
+  const [refresh, setRefresh] = useState(0);
   const [commentVal, setCommentVal] = useState("");
   const [commentsChanged, setCommentsChanged] = useState("");
+  const [idea, setIdea] = useState(props.popupidea);
   const [ideaComments, setIdeaComments] = useState([props.popupidea.comments]);
   const classes = useStyles();
+  const history = useHistory();
 
   // let userquestions = [{ id: 'fdsd', title: 'Why is the sky blue?' },
   // { id: 'adsf', title: 'Who invented pizza?' },
@@ -59,22 +64,22 @@ export default function IdeaPopup(props) {
     setCommentVal(e.target.value);
   };
   const isNikhil = (value) => {
-    return value != "Nikhil";
+    return value != user.userData.email;
   };
 
   const likeIdea = (idea) => {
     console.log("liking the post:");
     console.log(idea._id);
-    if (idea.likes.includes("Nikhil")) {
+    if (idea.likes.includes(user.userData.email)) {
       console.log("already liked the idea");
     } else {
-      if (idea.unlikes.includes("Nikhil")) {
+      if (idea.unlikes.includes(user.userData.email)) {
         const unlikes = idea.unlikes.filter(isNikhil);
-        const likes = idea.likes.push("Nikhil");
+        const likes = [...idea.likes, user.userData.email];
         axios
           .post("/api/ideas/likeIdea", {
             ideaId: idea._id,
-            likes: idea.likes,
+            likes: likes,
             unlikes: unlikes,
           })
           .then((response) => {
@@ -83,16 +88,17 @@ export default function IdeaPopup(props) {
               console.log(idea.likes);
               console.log("liked the idea and removed from unliked");
               props.refreshValChanged(refreshVal + 1);
+              setRefresh(refresh + 1);
             } else {
               alert("Couldnt unlike the  idea");
             }
           });
       } else {
-        const likes = idea.likes.push("Nikhil");
+        const likes = [...idea.likes, user.userData.email];
         axios
           .post("/api/ideas/likeIdea", {
             ideaId: idea._id,
-            likes: idea.likes,
+            likes: likes,
             unlikes: idea.unlikes,
           })
           .then((response) => {
@@ -101,6 +107,8 @@ export default function IdeaPopup(props) {
               console.log(idea.likes);
               console.log("just liked the idea");
               props.refreshValChanged(refreshVal + 1);
+              // props.refreshValChanged(refreshVal + 1);
+              setRefresh(refresh + 1);
             } else {
               alert("Couldnt like the  idea");
             }
@@ -112,35 +120,38 @@ export default function IdeaPopup(props) {
   const unlikeIdea = (idea) => {
     console.log("unliked the post:");
     console.log(idea._id);
-    if (idea.unlikes.includes("Nikhil")) {
+    if (idea.unlikes.includes(user.userData.email)) {
       console.log("already unliked the idea");
     } else {
-      if (idea.likes.includes("Nikhil")) {
+      if (idea.likes.includes(user.userData.email)) {
         const likes = idea.likes.filter(isNikhil);
-        const unlikes = idea.unlikes.push("Nikhil");
+        const unlikes = [...idea.unlikes, user.userData.email];
         axios
           .post("/api/ideas/likeIdea", {
             ideaId: idea._id,
             likes: likes,
-            unlikes: idea.unlikes,
+            unlikes: unlikes,
           })
           .then((response) => {
             if (response.data.success) {
               console.log(response.data.idea);
               console.log(idea.likes);
               console.log("unliked the idea and removed from liked");
+
+              // props.refreshValChanged(refreshVal + 1);
               props.refreshValChanged(refreshVal + 1);
+              setRefresh(refresh + 1);
             } else {
               alert("Couldnt unlike the  idea");
             }
           });
       } else {
-        const unlikes = idea.unlikes.push("Nikhil");
+        const unlikes = [...idea.unlikes, user.userData.email];
         axios
           .post("/api/ideas/likeIdea", {
             ideaId: idea._id,
             likes: idea.likes,
-            unlikes: idea.unlikes,
+            unlikes: unlikes,
           })
           .then((response) => {
             if (response.data.success) {
@@ -148,6 +159,8 @@ export default function IdeaPopup(props) {
               console.log(idea.likes);
               console.log("just unliked the idea");
               props.refreshValChanged(refreshVal + 1);
+              // props.refreshValChanged(refreshVal + 1);
+              setRefresh(refresh + 1);
             } else {
               alert("Couldnt unlike the  idea");
             }
@@ -162,7 +175,7 @@ export default function IdeaPopup(props) {
       comment: commentVal,
       commentBy: user.userData.email,
     };
-    const variables = { ideaId: props.popupidea._id, comment: c };
+    const variables = { ideaId: idea._id, comment: c };
     axios.post("/api/ideas/addComment", variables).then((response) => {
       if (response.data.success) {
         console.log("Comment added sucessfully - UI");
@@ -194,18 +207,23 @@ export default function IdeaPopup(props) {
   });
 
   useEffect(() => {
-    const variables = { ideaId: props.popupidea._id };
+    const variables = { ideaId: idea._id };
     axios.post("/api/ideas/getIdea", variables).then((response) => {
       if (response.data.success) {
         console.log("the idea used by UI is :");
         console.log(response.data.idea);
+        setIdea(response.data.idea);
         setIdeaComments(response.data.idea.comments);
         setCommentVal("");
       } else {
         alert("Something went wrong");
       }
     });
-  }, []);
+    return () => {
+      // hashHistory.goBack();
+      // history.push("/ideas");
+    };
+  }, [refresh]);
 
   useEffect(() => {
     console.log("The comments are : ");
@@ -241,7 +259,7 @@ export default function IdeaPopup(props) {
                 component="h2"
                 style={{ color: "#3C44B1", fontFamily: "ratiobold" }}
               >
-                {props.popupidea.title}
+                {idea.title}
               </Typography>
               <Divider style={{ marginBottom: "8px", visibility: "hidden" }} />
               <Typography
@@ -253,11 +271,10 @@ export default function IdeaPopup(props) {
               >
                 Submitted by{" "}
                 <strong>
-                  {props.popupidea.anonymous
-                    ? "An anonymous person"
-                    : props.popupidea.email}
+                  {idea.anonymous ? "An anonymous person" : idea.email}
                 </strong>{" "}
-                | Created At<strong>{props.popupidea.time}</strong>
+                | Created At{" "}
+                <strong>{new Date(idea.time).toLocaleString()}</strong>
               </Typography>
               <Divider style={{ marginTop: "8px", marginBottom: "16px" }} />
               <Typography
@@ -267,25 +284,32 @@ export default function IdeaPopup(props) {
                 textAlign="left"
                 style={{ fontFamily: "ratiomedium" }}
               >
-                {parse(props.popupidea.body)}
+                {parse(idea.body)}
               </Typography>
               <Divider style={{ marginTop: "8px", marginBottom: "16px" }} />
-              <div className="votes" style={{ flexDirection: "row" }}>
-                <ThumbUpAltIcon
-                  style={{ fontSize: 25 }}
-                  onClick={() => likeIdea(props.popupidea)}
-                />
+              <div
+                className="votes"
+                style={{ flexDirection: "row", alignItems: "center" }}
+              >
+                <IconButton>
+                  <ThumbUpAltIcon
+                    style={{ fontSize: 25, color: "#008450" }}
+                    onClick={() => likeIdea(idea)}
+                  />
+                </IconButton>
                 <span className="votescount" style={{ marginRight: 8 }}>
-                  {props.popupidea.likes.length -
-                    props.popupidea.unlikes.length}
+                  {idea.likes.length - idea.unlikes.length}
                 </span>
-                <ThumbDownAltIcon
-                  style={{ fontSize: 25, marginRight: 40 }}
-                  onClick={() => unlikeIdea(props.popupidea)}
-                />
+                <IconButton>
+                  <ThumbDownAltIcon
+                    style={{ fontSize: 25, color: "#F32013" }}
+                    onClick={() => unlikeIdea(idea)}
+                  />
+                </IconButton>
                 <div
                   style={{
                     cursor: "pointer",
+                    marginLeft: 40,
                     marginRight: 40,
                     display: "flex",
                     flexDirection: "row",

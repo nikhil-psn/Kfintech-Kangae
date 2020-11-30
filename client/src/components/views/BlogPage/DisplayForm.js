@@ -39,6 +39,8 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import PersonIcon from "@material-ui/icons/Person";
 import CountUp from "react-countup";
 import "./Chart.css";
+import Loading from "../LoginPage/LoginPage";
+import "../LoginPage/LoginPage.css";
 
 const animatedComponents = makeAnimated();
 const optionsSort = [
@@ -79,7 +81,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     maxWidth: 350,
-    backgroundColor: "#f5f5f0",
+    backgroundColor: "#e0ebeb",
   },
   rootTrending: {
     width: "100%",
@@ -150,8 +152,8 @@ export default function DisplayForm(props) {
   };
 
   const SortChanged = (value) => {
-    console.log("Sort changed to :");
-    console.log(value.value);
+    // console.log("Sort changed to :");
+    // console.log(value.value);
     setSort(value.value);
   };
 
@@ -160,7 +162,7 @@ export default function DisplayForm(props) {
       setCategoriesSrch([]);
     } else {
       const values = value.map((v) => v.value);
-      console.log(values);
+      // console.log(values);
       setCategoriesSrch(values);
     }
   };
@@ -170,7 +172,7 @@ export default function DisplayForm(props) {
       setStatusesSrch([]);
     } else {
       const values = value.map((v) => v.value);
-      console.log(values);
+      // console.log(values);
       setStatusesSrch(values);
     }
   };
@@ -185,16 +187,16 @@ export default function DisplayForm(props) {
           // console.log(response.data.ideas);
           impCounts = response.data.ideas.length;
           // setCategoryCount(iCounts);
-          console.log("the implemented ideas are ::");
-          console.log(impCounts);
+          // console.log("the implemented ideas are ::");
+          // console.log(impCounts);
           setIdeasImplemented(impCounts);
         }
       });
 
     axios.get("/api/users/getEmails").then((response) => {
       if (response.data.success) {
-        console.log("the total users  fetched are : ");
-        console.log(response.data.emails.length);
+        // console.log("the total users  fetched are : ");
+        // console.log(response.data.emails.length);
         setActiveBrainstormers(response.data.emails.length);
       } else {
         alert("Couldnt get users list");
@@ -207,8 +209,8 @@ export default function DisplayForm(props) {
       })
       .then((response) => {
         if (response.data.success) {
-          console.log("the total ideas are ::");
-          console.log(response.data.ideas.length);
+          // console.log("the total ideas are ::");
+          // console.log(response.data.ideas.length);
           setIdeasPosted(response.data.ideas.length);
         } else {
           alert("Couldnt get idea`s lists");
@@ -219,20 +221,20 @@ export default function DisplayForm(props) {
   useEffect(() => {
     axios.get("/api/ideas/getcategories").then((response) => {
       if (response.data.success) {
-        console.log("the categories fetched are : ");
-        console.log(response.data.categories);
+        // console.log("the categories fetched are : ");
+        // console.log(response.data.categories);
         const Categories = [];
         var i;
         for (i = 0; i < response.data.categories.length; i++) {
-          console.log(response.data.categories[i]);
+          // console.log(response.data.categories[i]);
           Categories.push({
             value: response.data.categories[i],
             label: response.data.categories[i],
           });
         }
         setCategories(Categories);
-        console.log("the categories options are : ");
-        console.log(Categories);
+        // console.log("the categories options are : ");
+        // console.log(Categories);
       } else {
         alert("Couldnt get categories list");
         setCategories([]);
@@ -240,20 +242,20 @@ export default function DisplayForm(props) {
     });
     axios.get("/api/ideas/getstatuses").then((response) => {
       if (response.data.success) {
-        console.log("the statuses fetched are : ");
-        console.log(response.data.statuses);
+        // console.log("the statuses fetched are : ");
+        // console.log(response.data.statuses);
         const Statuses = [];
         var i;
         for (i = 0; i < response.data.statuses.length; i++) {
-          console.log(response.data.statuses[i]);
+          // console.log(response.data.statuses[i]);
           Statuses.push({
             value: response.data.statuses[i],
             label: response.data.statuses[i],
           });
         }
         setStatuses(Statuses);
-        console.log("the statuses options are : ");
-        console.log(Statuses);
+        // console.log("the statuses options are : ");
+        // console.log(Statuses);
       } else {
         alert("Couldnt get statuses list");
         setStatuses([]);
@@ -262,8 +264,8 @@ export default function DisplayForm(props) {
   }, [refreshVal]);
 
   const searchValue = (e) => {
-    console.log("the value in search field is changed to :: ");
-    console.log(e.target.value);
+    // console.log("the value in search field is changed to :: ");
+    // console.log(e.target.value);
   };
 
   const searchingNow = (e) => {
@@ -281,7 +283,9 @@ export default function DisplayForm(props) {
       sSrch: sSrch,
       col: sort.split(" ")[0],
       val: parseInt(sort.split(" ")[1]),
-      searchStr: document.getElementById("searchBar").value,
+      searchStr: document.getElementById("searchBar").value
+        ? document.getElementById("searchBar").value
+        : "",
     };
     console.log("the axios params are : ");
     console.log(variables);
@@ -290,12 +294,18 @@ export default function DisplayForm(props) {
         console.log("the ideas used by UI are :");
         console.log(response.data.ideas);
         setIdeas(response.data.ideas);
+        console.log("the ideas send by UI are :");
+        console.log(response.data.ideas[0]);
       } else {
         alert("Couldnt get idea`s lists");
       }
     });
     // },[sort]);
   }, [sort, categories, statuses, categoriesSrch, statusesSrch, refreshVal]);
+
+  // if (ideas.length == 0) {
+  //   return <Loading />;
+  // }
 
   return (
     <Paper className={classes.pageContent}>
@@ -371,12 +381,14 @@ export default function DisplayForm(props) {
             sm={8}
             style={{ paddingLeft: "10px" }}
           >
+            {/* {ideas.length > 0 && ( */}
             <DisplayFormPaper
               admin={props.admin}
               refreshVal={refreshVal}
               refreshValChanged={refreshValChanged}
               ideas={ideas}
             />
+            {/* )} */}
           </Grid>
           <Grid xs={4} style={{ paddingLeft: "20px", paddingRight: "10px" }}>
             <List

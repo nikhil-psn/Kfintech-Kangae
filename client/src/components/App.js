@@ -36,10 +36,11 @@ function App() {
               path="/analytics"
               component={Auth(AnalyticsAdmin, true)}
             />
-            <Route exact path="/ideas" component={Auth(IdeasPage, true)} />
-            <Route exact path="/profile" component={Auth(ProfilePage, true)} />
-            <Route exact path="/newIdea" component={Auth(NewIdeaPage, true)} />
-            <Route exact path="/admin" component={Auth(AdminPage, true)} />
+            <Route exact path="/ideas" component={Auth(IdeasPage, null)} />
+            <Route exact path="/profile" component={Auth(ProfilePage, null)} />
+            <Route exact path="/newIdea" component={Auth(NewIdeaPage, null)} />
+            <Route exact path="/admin" component={Auth(AdminPage, null)} />
+            <Route exact path="/test" component={Auth(Test, null)} />
           </Switch>
         </div>
       </Router>

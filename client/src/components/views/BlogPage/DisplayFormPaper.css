@@ -33,8 +33,8 @@
 } */
 
 .post__status {
-  margin-top: 20px;
-  text-align: center;
+  margin-top: 25px;
+  text-align: left;
   font-family: ratiomedium;
 }
 
@@ -53,8 +53,23 @@
   } */
 .more {
   display: flex;
-  flex: 1;
-  min-width: 150px !important;
+  /* flex: 1; */
+  min-width: 165px !important;
   flex-direction: column;
   justify-content: space-between;
+  align-items: center;
+}
+
+.delete__button {
+  width: fit-content;
+}
+
+.status {
+  min-width: 165px !important;
+}
+
+.labels {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
 }

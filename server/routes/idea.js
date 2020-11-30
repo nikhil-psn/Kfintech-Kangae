@@ -345,6 +345,18 @@ router.post("/getIdea", (req, res) => {
   });
 });
 
+// router.post("/likeIdea", (req, res) => {
+//   Idea.findByIdAndUpdate({ _id: req.body.ideaId }).exec((err, idea) => {
+//     if (err) {
+//       console.log("error in backend \n" + err);
+//       return res.status(400).send(err);
+//     } else {
+//       console.log("Sucessfully fetched the Idea");
+//       res.status(200).json({ success: true, idea });
+//     }
+//   });
+// });
+
 router.post("/likeIdea", (req, res) => {
   Idea.findByIdAndUpdate(
     req.body.ideaId,
@@ -353,6 +365,7 @@ router.post("/likeIdea", (req, res) => {
       if (err) {
         console.log(err);
       } else {
+        res.status(200).json({ success: true, docs });
         console.log("Liked/unliked idea : ", docs);
       }
     }

@@ -15,6 +15,7 @@ import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import SearchIcon from "@material-ui/icons/Search";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
+import PersonIcon from "@material-ui/icons/Person";
 import Avatar from "@material-ui/core/Avatar";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -45,18 +46,18 @@ const useStyles = makeStyles((theme) => ({
 export default function Header() {
   const classes = useStyles();
   const user = useSelector((state) => state.user);
-  const name = user.userData
-    ? user.userData.email.substring(0, 1).toUpperCase()
-    : "A";
+  // const name = user.userData
+  //   ? user.userData.email.substring(0, 1).toUpperCase()
+  //   : "A";
 
   // const profileButtonClicked = () => {
   //   window.location.assign("/profile");
   // };
-  useEffect(() => {
-    console.log("the logged in user is :::");
-    console.log(user);
-    console.log(user.userData.email);
-  }, []);
+  // useEffect(() => {
+  //   console.log("the logged in user is :::");
+  //   console.log(user);
+  //   console.log(user.userData.email);
+  // }, []);
 
   const logout = () => {
     axios.get("/api/users/logout", { _id: user.userData.id });
@@ -97,7 +98,8 @@ export default function Header() {
               </Link>
               <Link to="/profile">
                 <IconButton style={{ backgroundColor: "transparent" }}>
-                  <Avatar className={classes.purple}>{name}</Avatar>
+                  <PersonIcon />
+                  {/* <Avatar className={classes.purple}>{name}</Avatar> */}
                 </IconButton>
               </Link>
               <Link>

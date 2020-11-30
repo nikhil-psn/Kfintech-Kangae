@@ -19,6 +19,10 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import Select from "react-select";
 import { confirmAlert } from "react-confirm-alert"; // for confirm alert
 import "react-confirm-alert/src/react-confirm-alert.css"; // for confirm alert
+import { useSelector } from "react-redux";
+// import ReactNotification from "react-notifications-component";
+// import "react-notifications-component/dist/theme.css";
+// import { store } from "react-notifications-component";
 
 const animatedComponents = makeAnimated();
 const optionsStatus = [
@@ -88,9 +92,11 @@ export default function DisplayFormPaper(props) {
   var selected_idea;
   const [openPopup, setOpenPopup] = useState(false);
   const [popupidea, setPopupidea] = useState("");
+  const [ideas, setIdeas] = useState(props.ideas);
   const refreshVal = props.refreshVal;
   // const dropdownStatusValue = "Development";
   var editVariables;
+  const user = useSelector((state) => state.user);
 
   const [state, setState] = React.useState({
     sortBy: "",
@@ -101,7 +107,7 @@ export default function DisplayFormPaper(props) {
   });
 
   const isNikhil = (value) => {
-    return value != "Nikhil";
+    return value != user.userData.email;
   };
 
   const likeIdea = (idea) => {
@@ -110,16 +116,16 @@ export default function DisplayFormPaper(props) {
     setVotes(v);
     console.log("liking the post:");
     console.log(idea._id);
-    if (idea.likes.includes("Nikhil")) {
+    if (idea.likes.includes(user.userData.email)) {
       console.log("already liked the idea");
     } else {
-      if (idea.unlikes.includes("Nikhil")) {
+      if (idea.unlikes.includes(user.userData.email)) {
         const unlikes = idea.unlikes.filter(isNikhil);
-        const likes = idea.likes.push("Nikhil");
+        const likes = [...idea.likes, user.userData.email];
         axios
           .post("/api/ideas/likeIdea", {
             ideaId: idea._id,
-            likes: idea.likes,
+            likes: likes,
             unlikes: unlikes,
           })
           .then((response) => {
@@ -127,17 +133,20 @@ export default function DisplayFormPaper(props) {
               console.log(response.data.idea);
               console.log(idea.likes);
               console.log("liked the idea and removed from unliked");
+              console.log("the refresh value is : ");
+              console.log(props.refreshVal);
               props.refreshValChanged(refreshVal + 1);
+              console.log(props.refreshVal);
             } else {
               alert("Couldnt unlike the  idea");
             }
           });
       } else {
-        const likes = idea.likes.push("Nikhil");
+        const likes = [...idea.likes, user.userData.email];
         axios
           .post("/api/ideas/likeIdea", {
             ideaId: idea._id,
-            likes: idea.likes,
+            likes: likes,
             unlikes: idea.unlikes,
           })
           .then((response) => {
@@ -145,7 +154,10 @@ export default function DisplayFormPaper(props) {
               console.log(response.data.idea);
               console.log(idea.likes);
               console.log("just liked the idea");
+              console.log("the refresh value is : ");
+              console.log(props.refreshVal);
               props.refreshValChanged(refreshVal + 1);
+              console.log(props.refreshVal);
             } else {
               alert("Couldnt like the  idea");
             }
@@ -160,42 +172,48 @@ export default function DisplayFormPaper(props) {
     setVotes(v);
     console.log("unliked the post:");
     console.log(idea._id);
-    if (idea.unlikes.includes("Nikhil")) {
+    if (idea.unlikes.includes(user.userData.email)) {
       console.log("already unliked the idea");
     } else {
-      if (idea.likes.includes("Nikhil")) {
+      if (idea.likes.includes(user.userData.email)) {
         const likes = idea.likes.filter(isNikhil);
-        const unlikes = idea.unlikes.push("Nikhil");
+        const unlikes = [...idea.unlikes, user.userData.email];
         axios
           .post("/api/ideas/likeIdea", {
             ideaId: idea._id,
             likes: likes,
-            unlikes: idea.unlikes,
+            unlikes: unlikes,
           })
           .then((response) => {
             if (response.data.success) {
               console.log(response.data.idea);
               console.log(idea.likes);
               console.log("unliked the idea and removed from liked");
+              console.log("the refresh value is : ");
+              console.log(props.refreshVal);
               props.refreshValChanged(refreshVal + 1);
+              console.log(props.refreshVal);
             } else {
               alert("Couldnt unlike the  idea");
             }
           });
       } else {
-        const unlikes = idea.unlikes.push("Nikhil");
+        const unlikes = [...idea.unlikes, user.userData.email];
         axios
           .post("/api/ideas/likeIdea", {
             ideaId: idea._id,
             likes: idea.likes,
-            unlikes: idea.unlikes,
+            unlikes: unlikes,
           })
           .then((response) => {
             if (response.data.success) {
               console.log(response.data.idea);
               console.log(idea.likes);
               console.log("just unliked the idea");
+              console.log("the refresh value is : ");
+              console.log(props.refreshVal);
               props.refreshValChanged(refreshVal + 1);
+              console.log(props.refreshVal);
             } else {
               alert("Couldnt unlike the  idea");
             }
@@ -220,7 +238,6 @@ export default function DisplayFormPaper(props) {
         console.log("Deleted the idea : ");
         console.log(response.data.idea);
         props.refreshValChanged(refreshVal + 1);
-        // props.refreshVal=props.refreshVal+1;
       } else {
         alert("Couldnt delete the  idea");
       }
@@ -256,8 +273,6 @@ export default function DisplayFormPaper(props) {
           label: "No",
           onClick: () => {
             alert("Clicked No");
-            // const userName = prompt("Please Enter your Name");
-            // console.log("The name is : ", userName);
           },
         },
       ],
@@ -280,115 +295,112 @@ export default function DisplayFormPaper(props) {
       time: selected_idea.time,
       status: value.value,
     };
-    // console.log("Editing the idea,");
-    // console.log(variables);
     submit();
-    // axios.patch("/api/ideas/editIdea", variables).then((response) => {
-    //   if (response.data.success) {
-    //     console.log("Edited the idea,");
-    //     console.log(response.data.idea);
-    //     props.refreshValChanged(refreshVal + 1);
-    //   } else {
-    //     alert("Couldn't change the status for this idea");
-    //   }
-    // });
   };
 
   const ideasList = props.ideas.map((some_idea) => {
     return (
-      <Paper
-        id={some_idea._id + "paper"}
-        className={classes.paper}
-        // className="paper"
-        elevation={3}
-        style={{ paddingBottom: "10px", overflowX: "auto" }}
-      >
-        <div className="post" id={some_idea._id + "div"}>
-          <div
-            className="votes"
-            style={{ display: "flex", alignItems: "center" }}
-          >
-            <IconButton>
-              <ThumbUpAltIcon
-                style={{ fontSize: 25, color: "#008450" }}
-                onClick={() => likeIdea(some_idea)}
-              />
-            </IconButton>
-            <span className="votescount" style={{ fontSize: 22 }}>
-              {some_idea.likes.length - some_idea.unlikes.length}
-            </span>
-            <IconButton>
-              <ThumbDownAltIcon
-                style={{ fontSize: 25, color: "#F32013" }}
-                onClick={() => unlikeIdea(some_idea)}
-              />
-            </IconButton>
-          </div>
-          <div
-            className="post__content"
-            onClick={() => {
-              setPopupidea(some_idea);
-              setOpenPopup(true);
-            }}
-          >
-            <div className="post__title">
-              <Typography
-                gutterBottom
-                variant="h5"
-                style={{
-                  fontSize: "1.3rem",
-                  fontFamily: "ratiobold",
-                  color: "#232769",
-                }}
-                component="h3"
-              >
-                {some_idea.title} {"  "}
-                {"  "}
-              </Typography>
-            </div>
-            <div className="post__status">
-              <div>
-                <span className="dept">{some_idea.category}</span>
-              </div>
-              Submitted by{" "}
-              <strong>
-                {some_idea.anonymous ? "An anonymous person" : some_idea.email}
-              </strong>{" "}
-              | Created at <strong>{some_idea.time}</strong> |{" "}
-              <div>
-                <span className="dept">{some_idea.status}</span>
-              </div>
-            </div>
-          </div>
-          {props.admin && (
-            <div className="more">
-              {/* <button onClick={submit}>Confirm dialog</button> */}
-              <Select
-                id="dropdownStatus"
-                // value={dropdownStatusValue}
-                className="status"
-                onChange={(e) => {
-                  selected_idea = some_idea;
-                  StatusChanged(e);
-                }}
-                closeMenuOnSelect={false}
-                components={animatedComponents}
-                placeholder="Change Status"
-                options={optionsStatus}
-                style={{ padding: "10px" }}
-              />
+      <div>
+        <Paper
+          id={some_idea._id + "paper"}
+          className={classes.paper}
+          // className="paper"
+          elevation={3}
+          style={{ paddingBottom: "10px", overflowX: "auto" }}
+        >
+          <div className="post" id={some_idea._id + "div"}>
+            <div
+              className="votes"
+              style={{ display: "flex", alignItems: "center" }}
+            >
               <IconButton>
-                <DeleteIcon
-                  onClick={(e) => {
-                    e.preventDefault();
-                    deletePost(some_idea);
-                  }}
+                <ThumbUpAltIcon
+                  style={{ fontSize: 25, color: "#008450" }}
+                  onClick={() => likeIdea(some_idea)}
+                />
+              </IconButton>
+              <span className="votescount" style={{ fontSize: 22 }}>
+                {some_idea.likes.length - some_idea.unlikes.length}
+              </span>
+              <IconButton>
+                <ThumbDownAltIcon
+                  style={{ fontSize: 25, color: "#F32013" }}
+                  onClick={() => unlikeIdea(some_idea)}
                 />
               </IconButton>
             </div>
-          )}
-        </div>
-      </Paper>
+            <div
+              className="post__content"
+              onClick={() => {
+                setPopupidea(some_idea);
+                setOpenPopup(true);
+              }}
+            >
+              <div className="post__title">
+                <Typography
+                  gutterBottom
+                  variant="h5"
+                  style={{
+                    fontSize: "1.3rem",
+                    fontFamily: "ratiobold",
+                    color: "#232769",
+                  }}
+                  component="h3"
+                >
+                  {some_idea.title} {"  "}
+                  {"  "}
+                </Typography>
+              </div>
+              <div className="post__status">
+                <div></div>
+                <span className="dept">{some_idea.status}</span> | Submitted by{" "}
+                <strong>
+                  {some_idea.anonymous
+                    ? "An anonymous person"
+                    : some_idea.email}
+                </strong>{" "}
+                | <span className="dept">{some_idea.category}</span>
+                <p style={{ fontSize: "12px", marginTop: "0px" }}>
+                  Created at{" "}
+                  <strong>{new Date(some_idea.time).toLocaleString()}</strong>
+                </p>
+                {/* .split("GMT")[0].trim() */}
+                {/* <div className="labels">
+                  <span className="dept">{some_idea.status}</span>
+                  <span className="dept">{some_idea.category}</span>
+                </div> */}
+              </div>
+            </div>
+            {props.admin && (
+              <div className="more">
+                {/* <button onClick={submit}>Confirm dialog</button> */}
+                <Select
+                  id="dropdownStatus"
+                  // value={dropdownStatusValue}
+                  className="status"
+                  onChange={(e) => {
+                    selected_idea = some_idea;
+                    StatusChanged(e);
+                  }}
+                  closeMenuOnSelect={false}
+                  components={animatedComponents}
+                  placeholder="Change Status"
+                  options={optionsStatus}
+                  style={{ padding: "10px" }}
+                />
+                <IconButton className="delete__button">
+                  <DeleteIcon
+                    onClick={(e) => {
+                      e.preventDefault();
+                      deletePost(some_idea);
+                    }}
+                  />
+                </IconButton>
+              </div>
+            )}
+          </div>
+        </Paper>
+      </div>
     );
   });
 
