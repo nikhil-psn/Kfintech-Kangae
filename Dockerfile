@@ -14,23 +14,26 @@ RUN npm install
 
 # Bundle app source
 COPY . .
+# COPY server /app
+# COPY uploads /app
+# COPY Dockerfile /app
 
 EXPOSE 5000
 
-# CMD ["npm","start"]
+CMD ["npm","start"]
 
-WORKDIR /app/client
+# WORKDIR /app/client
 
 # COPY package*.json /app/client
 
-RUN npm install
+# RUN npm install
 # RUN npm i firebase-tools
 # RUN npm install firebase
 
 # COPY . .
 
-EXPOSE 3000
+# EXPOSE 3000
 
-WORKDIR /app
+# WORKDIR /app
 
-CMD ["npm","run","dev"]
+# CMD ["npm","run","dev"]
